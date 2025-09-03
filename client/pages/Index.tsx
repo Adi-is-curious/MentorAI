@@ -1,56 +1,10 @@
-import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
-import type { AnalyzeResponse } from "@shared/api";
 import { Sparkles, ShieldCheck, Upload, LineChart, CheckCircle2 } from "lucide-react";
+import Assessment from "@/components/mentor/Assessment";
 
 export default function Index() {
-  const [skills, setSkills] = useState("");
-  const [interests, setInterests] = useState("");
-  const [resumeText, setResumeText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<AnalyzeResponse | null>(null);
-  const progress = useMemo(() => (loading ? 66 : result ? 100 : 0), [loading, result]);
-  const fileRef = useRef<HTMLInputElement | null>(null);
-
-  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    try {
-      const text = await f.text();
-      setResumeText(text.slice(0, 5000));
-    } catch {
-      setError("Could not read file. Please paste your resume text instead.");
-    }
-  }
-
-  async function onAnalyze(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const res = await fetch("/api/ai/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ skills, interests, resumeText }),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      const data = (await res.json()) as AnalyzeResponse;
-      setResult(data);
-    } catch (err) {
-      setError("Something went wrong while analyzing. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <div>
       {/* Hero */}
@@ -126,7 +80,7 @@ export default function Index() {
               <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">AI Skill Assessment & Career Suggestions</h2>
               <p className="mt-2 text-muted-foreground">Interactive questionnaire, resume upload, and AI-powered results.</p>
             </div>
-            {(await import("@/components/mentor/Assessment")).default()}
+            <Assessment />
           </div>
         </div>
       </section>

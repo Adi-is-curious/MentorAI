@@ -22,7 +22,13 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-primary to-secondary" />
+            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                <circle cx="12" cy="7" r="3" fill="white" />
+                <path d="M4 20c0-3.5 3-6 8-6s8 2.5 8 6" fill="white" />
+                <path d="M9 13l3 2 3-2 2 3c-2-.5-4-.8-5-.8s-3 .3-5 .8l2-3z" fill="white" />
+              </svg>
+            </div>
             <span className="text-lg font-extrabold tracking-tight">MentorAI</span>
           </Link>
           <nav className="ml-6 hidden gap-1 lg:flex">

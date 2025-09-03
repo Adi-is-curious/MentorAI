@@ -121,119 +121,12 @@ export default function Index() {
       {/* Quiz */}
       <section id="quiz" className="relative border-t bg-gradient-to-b from-background via-background to-accent/20">
         <div className="container py-16">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-5xl">
             <div className="mb-8 text-center">
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Career Quiz</h2>
-              <p className="mt-2 text-muted-foreground">Tell us about your skills and interests. Optionally paste resume text.</p>
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">AI Skill Assessment & Career Suggestions</h2>
+              <p className="mt-2 text-muted-foreground">Interactive questionnaire, resume upload, and AI-powered results.</p>
             </div>
-            <Card>
-              <CardContent className="pt-6">
-                <form className="space-y-6" onSubmit={onAnalyze}>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="skills">Skills (comma-separated)</Label>
-                      <Input id="skills" placeholder="react, typescript, sql" value={skills} onChange={(e) => setSkills(e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="interests">Interests (comma-separated)</Label>
-                      <Input id="interests" placeholder="ai/ml, product, fintech" value={interests} onChange={(e) => setInterests(e.target.value)} />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="resume">Resume text (optional)</Label>
-                    <Textarea id="resume" rows={6} placeholder="Paste relevant resume content here..." value={resumeText} onChange={(e) => setResumeText(e.target.value)} />
-                    <div className="flex items-center gap-3">
-                      <Input ref={fileRef} type="file" accept=".txt,.md,.pdf" onChange={handleFile} />
-                    </div>
-                  </div>
-                  {progress > 0 ? (
-                    <div className="space-y-2">
-                      <Label>Progress</Label>
-                      <Progress value={progress} />
-                    </div>
-                  ) : null}
-                  {error ? <p className="text-sm text-destructive">{error}</p> : null}
-                  <div className="flex flex-wrap gap-3">
-                    <Button type="submit" disabled={loading}>
-                      {loading ? "Analyzing..." : "Analyze & get suggestions"}
-                    </Button>
-                    <Button asChild variant="secondary">
-                      <Link to="/auth">Save progress (sign in)</Link>
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-
-            {result ? (
-              <div className="mt-8 grid gap-6 md:grid-cols-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Suggested Careers</CardTitle>
-                    <CardDescription>Top matches for your profile</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {result.suggestions.map((s) => (
-                        <li key={s.domain} className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-0.5 text-primary" />
-                          <span>
-                            <span className="font-medium">{s.domain}.</span> {s.reason}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Skill Gaps</CardTitle>
-                    <CardDescription>Focus areas to improve</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {result.skillGaps.map((g) => (
-                        <span key={g} className="rounded-full bg-accent px-3 py-1 text-sm text-accent-foreground">
-                          {g}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="md:col-span-2">
-                  <CardHeader>
-                    <CardTitle>Learning Roadmap</CardTitle>
-                    <CardDescription>Your next steps</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ol className="space-y-2">
-                      {result.learningPath.map((i, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                            {idx + 1}
-                          </span>
-                          {i.url ? (
-                            <a href={i.url} className="underline underline-offset-4" target="_blank" rel="noreferrer">
-                              {i.title}
-                            </a>
-                          ) : (
-                            <span>{i.title}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ol>
-                    <div className="mt-6 flex gap-3">
-                      <Button asChild>
-                        <Link to="/suggestions">View full suggestions</Link>
-                      </Button>
-                      <Button asChild variant="outline">
-                        <a href="#quiz">Refine inputs</a>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            ) : null}
+            {(await import("@/components/mentor/Assessment")).default()}
           </div>
         </div>
       </section>

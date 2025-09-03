@@ -26,10 +26,15 @@ export function SiteHeader() {
               <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
                 <circle cx="12" cy="7" r="3" fill="white" />
                 <path d="M4 20c0-3.5 3-6 8-6s8 2.5 8 6" fill="white" />
-                <path d="M9 13l3 2 3-2 2 3c-2-.5-4-.8-5-.8s-3 .3-5 .8l2-3z" fill="white" />
+                <path
+                  d="M9 13l3 2 3-2 2 3c-2-.5-4-.8-5-.8s-3 .3-5 .8l2-3z"
+                  fill="white"
+                />
               </svg>
             </div>
-            <span className="text-lg font-extrabold tracking-tight">MentorAI</span>
+            <span className="text-lg font-extrabold tracking-tight">
+              MentorAI
+            </span>
           </Link>
           <nav className="ml-6 hidden gap-1 lg:flex">
             {navItems.map((item) => (
@@ -83,10 +88,19 @@ export function SiteHeader() {
                   </NavLink>
                 ))}
                 <div className="mt-4 flex gap-2">
-                  <Button asChild variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="flex-1"
+                    onClick={() => setOpen(false)}
+                  >
                     <Link to="/auth">Sign in</Link>
                   </Button>
-                  <Button asChild className="flex-1" onClick={() => setOpen(false)}>
+                  <Button
+                    asChild
+                    className="flex-1"
+                    onClick={() => setOpen(false)}
+                  >
                     <Link to="/quiz">Get started</Link>
                   </Button>
                 </div>

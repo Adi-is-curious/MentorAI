@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import type { AnalyzeResponse, AnalyzeRequest } from "@shared/api";
@@ -20,7 +26,11 @@ export default function Analyzer() {
       }
       try {
         const body = JSON.parse(saved) as AnalyzeRequest;
-        const res = await fetch("/api/ai/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+        const res = await fetch("/api/ai/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
         if (!res.ok) throw new Error("Request failed");
         const json = (await res.json()) as AnalyzeResponse;
         setData(json);
@@ -39,7 +49,9 @@ export default function Analyzer() {
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold tracking-tight">Analyzer</h1>
-          <p className="text-muted-foreground">We analyze your responses to provide insights.</p>
+          <p className="text-muted-foreground">
+            We analyze your responses to provide insights.
+          </p>
         </div>
 
         {loading ? (
@@ -70,8 +82,13 @@ export default function Analyzer() {
                 <ul className="space-y-2">
                   {data.suggestions.map((s) => (
                     <li key={s.domain} className="flex items-start gap-2">
-                      <span className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">✓</span>
-                      <span><span className="font-semibold">{s.domain}.</span> {s.reason}</span>
+                      <span className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                        ✓
+                      </span>
+                      <span>
+                        <span className="font-semibold">{s.domain}.</span>{" "}
+                        {s.reason}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -86,7 +103,12 @@ export default function Analyzer() {
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {data.skillGaps.map((g) => (
-                    <span key={g} className="rounded-full bg-accent px-3 py-1 text-sm text-accent-foreground">{g}</span>
+                    <span
+                      key={g}
+                      className="rounded-full bg-accent px-3 py-1 text-sm text-accent-foreground"
+                    >
+                      {g}
+                    </span>
                   ))}
                 </div>
               </CardContent>
@@ -101,13 +123,24 @@ export default function Analyzer() {
                 <ol className="space-y-2">
                   {data.learningPath.map((i, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{idx + 1}</span>
+                      <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                        {idx + 1}
+                      </span>
                       {i.url ? (
-                        <a href={i.url} className="underline underline-offset-4" target="_blank" rel="noreferrer">{i.title}</a>
+                        <a
+                          href={i.url}
+                          className="underline underline-offset-4"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {i.title}
+                        </a>
                       ) : (
                         <span>{i.title}</span>
                       )}
-                      <span className="ml-2 rounded-full bg-accent px-2.5 py-0.5 text-xs text-accent-foreground">{i.type}</span>
+                      <span className="ml-2 rounded-full bg-accent px-2.5 py-0.5 text-xs text-accent-foreground">
+                        {i.type}
+                      </span>
                     </li>
                   ))}
                 </ol>

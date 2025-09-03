@@ -75,7 +75,9 @@ const Carousel = React.forwardRef<
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
     const isPausedRef = React.useRef(false);
-    const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+    const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(
+      null,
+    );
     const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
@@ -148,9 +150,12 @@ const Carousel = React.forwardRef<
       const start = () => {
         clearTimers();
         if (isPausedRef.current) return;
-        intervalRef.current = setInterval(() => {
-          api.scrollNext();
-        }, Math.max(1500, autoPlayInterval));
+        intervalRef.current = setInterval(
+          () => {
+            api.scrollNext();
+          },
+          Math.max(1500, autoPlayInterval),
+        );
       };
 
       const startWithDelay = () => {
@@ -209,24 +214,39 @@ const Carousel = React.forwardRef<
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          onMouseEnter={pauseOnHover ? () => {
-            isPausedRef.current = true;
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            if (timeoutRef.current) clearTimeout(timeoutRef.current);
-          } : undefined}
-          onMouseLeave={pauseOnHover ? () => {
-            isPausedRef.current = false;
-            // restart after leaving
-            if (autoPlay && api) {
-              if (timeoutRef.current) clearTimeout(timeoutRef.current);
-              timeoutRef.current = setTimeout(() => {
-                if (!isPausedRef.current) {
+          onMouseEnter={
+            pauseOnHover
+              ? () => {
+                  isPausedRef.current = true;
                   if (intervalRef.current) clearInterval(intervalRef.current);
-                  intervalRef.current = setInterval(() => api.scrollNext(), Math.max(1500, autoPlayInterval));
+                  if (timeoutRef.current) clearTimeout(timeoutRef.current);
                 }
-              }, Math.max(0, autoPlayDelay));
-            }
-          } : undefined}
+              : undefined
+          }
+          onMouseLeave={
+            pauseOnHover
+              ? () => {
+                  isPausedRef.current = false;
+                  // restart after leaving
+                  if (autoPlay && api) {
+                    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                    timeoutRef.current = setTimeout(
+                      () => {
+                        if (!isPausedRef.current) {
+                          if (intervalRef.current)
+                            clearInterval(intervalRef.current);
+                          intervalRef.current = setInterval(
+                            () => api.scrollNext(),
+                            Math.max(1500, autoPlayInterval),
+                          );
+                        }
+                      },
+                      Math.max(0, autoPlayDelay),
+                    );
+                  }
+                }
+              : undefined
+          }
           className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"

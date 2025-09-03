@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,7 +20,9 @@ export default function Auth() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 900));
     setLoading(false);
-    alert("This demo uses placeholder auth. Connect Supabase/Auth0 to enable secure authentication.");
+    alert(
+      "This demo uses placeholder auth. Connect Supabase/Auth0 to enable secure authentication.",
+    );
   }
 
   return (
@@ -23,7 +31,9 @@ export default function Auth() {
       <div className="container py-16">
         <Card className="mx-auto w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl font-extrabold tracking-tight">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-extrabold tracking-tight">
+              Welcome back
+            </CardTitle>
             <CardDescription>Sign in or create your account</CardDescription>
           </CardHeader>
           <CardContent>
@@ -36,7 +46,12 @@ export default function Auth() {
                 <form className="space-y-4" onSubmit={onSubmit}>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" required placeholder="you@example.com" />
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      placeholder="you@example.com"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
@@ -46,10 +61,16 @@ export default function Auth() {
                     {loading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
-                <div className="my-4 text-center text-xs text-muted-foreground">or continue with</div>
+                <div className="my-4 text-center text-xs text-muted-foreground">
+                  or continue with
+                </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline"><Github className="mr-2" /> GitHub</Button>
-                  <Button variant="outline"><Mail className="mr-2" /> Google</Button>
+                  <Button variant="outline">
+                    <Github className="mr-2" /> GitHub
+                  </Button>
+                  <Button variant="outline">
+                    <Mail className="mr-2" /> Google
+                  </Button>
                 </div>
               </TabsContent>
               <TabsContent value="signup">
@@ -60,7 +81,12 @@ export default function Auth() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email2">Email</Label>
-                    <Input id="email2" type="email" required placeholder="you@example.com" />
+                    <Input
+                      id="email2"
+                      type="email"
+                      required
+                      placeholder="you@example.com"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password2">Password</Label>
@@ -70,10 +96,16 @@ export default function Auth() {
                     {loading ? "Creating account..." : "Create Account"}
                   </Button>
                 </form>
-                <div className="my-4 text-center text-xs text-muted-foreground">or sign up with</div>
+                <div className="my-4 text-center text-xs text-muted-foreground">
+                  or sign up with
+                </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline"><Github className="mr-2" /> GitHub</Button>
-                  <Button variant="outline"><Mail className="mr-2" /> Google</Button>
+                  <Button variant="outline">
+                    <Github className="mr-2" /> GitHub
+                  </Button>
+                  <Button variant="outline">
+                    <Mail className="mr-2" /> Google
+                  </Button>
                 </div>
               </TabsContent>
             </Tabs>

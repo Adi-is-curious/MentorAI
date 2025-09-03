@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 export default function Suggestions() {
@@ -9,10 +15,15 @@ export default function Suggestions() {
         <Card>
           <CardHeader>
             <CardTitle>AI Suggestions</CardTitle>
-            <CardDescription>We will integrate AI APIs here to generate personalized suggestions.</CardDescription>
+            <CardDescription>
+              We will integrate AI APIs here to generate personalized
+              suggestions.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-muted-foreground">In the meantime, analyze your responses or explore resources.</p>
+            <p className="text-muted-foreground">
+              In the meantime, analyze your responses or explore resources.
+            </p>
             <div className="flex gap-3">
               <Button asChild>
                 <Link to="/resume-analyzer">Analyze now</Link>

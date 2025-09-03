@@ -1,15 +1,32 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import { Check, HelpCircle } from "lucide-react";
 
@@ -18,8 +35,12 @@ const schema = z
     skills: z.string().optional().default(""),
     interests: z.string().optional().default(""),
     resumeText: z.string().optional().default(""),
-    rolePref: z.enum(["engineering", "data", "design", "product", "other"]).default("engineering"),
-    experience: z.enum(["student", "junior", "mid", "senior"]).default("junior"),
+    rolePref: z
+      .enum(["engineering", "data", "design", "product", "other"])
+      .default("engineering"),
+    experience: z
+      .enum(["student", "junior", "mid", "senior"])
+      .default("junior"),
     industries: z.array(z.string()).default([]),
     codingLanguages: z.array(z.string()).default([]),
     tools: z.array(z.string()).default([]),
@@ -45,7 +66,8 @@ const schema = z
       val.industries.length > 0 ||
       val.codingLanguages.length > 0,
     {
-      message: "Provide some background: fill skills/interests or select industries/languages.",
+      message:
+        "Provide some background: fill skills/interests or select industries/languages.",
       path: ["skills"],
     },
   );
@@ -122,11 +144,19 @@ export default function Assessment() {
       update("resumeText", text.slice(0, 7000));
       return;
     }
-    if (f.name.endsWith(".pdf") || f.name.endsWith(".doc") || f.name.endsWith(".docx")) {
-      setApiError("For PDF/DOCX please paste the resume text for now. Native parsing can be enabled later.");
+    if (
+      f.name.endsWith(".pdf") ||
+      f.name.endsWith(".doc") ||
+      f.name.endsWith(".docx")
+    ) {
+      setApiError(
+        "For PDF/DOCX please paste the resume text for now. Native parsing can be enabled later.",
+      );
       return;
     }
-    setApiError("Unsupported file type. Please upload a text/markdown file or paste your resume text.");
+    setApiError(
+      "Unsupported file type. Please upload a text/markdown file or paste your resume text.",
+    );
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -159,15 +189,25 @@ export default function Assessment() {
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">AI Skill Assessment</CardTitle>
-              <CardDescription>Answer in-depth questions. Tooltips explain each field.</CardDescription>
+              <CardDescription>
+                Answer in-depth questions. Tooltips explain each field.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="space-y-5" onSubmit={onSubmit} aria-describedby="form-help">
+              <form
+                className="space-y-5"
+                onSubmit={onSubmit}
+                aria-describedby="form-help"
+              >
                 {/* Multiple choice */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="rolePref">Preferred Track</Label>
-                    <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Preferred Track">
+                    <div
+                      className="grid grid-cols-2 gap-2"
+                      role="radiogroup"
+                      aria-label="Preferred Track"
+                    >
                       {[
                         { v: "engineering", l: "Engineering" },
                         { v: "data", l: "Data" },
@@ -184,7 +224,9 @@ export default function Assessment() {
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span>{o.l}</span>
-                            {form.rolePref === o.v ? <Check className="h-4 w-4 text-primary" /> : null}
+                            {form.rolePref === o.v ? (
+                              <Check className="h-4 w-4 text-primary" />
+                            ) : null}
                           </div>
                         </button>
                       ))}
@@ -198,11 +240,17 @@ export default function Assessment() {
                         Other
                       </button>
                     </div>
-                    <Helper id="help-role">Choose what you enjoy most today.</Helper>
+                    <Helper id="help-role">
+                      Choose what you enjoy most today.
+                    </Helper>
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="experience">Experience Level</Label>
-                    <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Experience Level">
+                    <div
+                      className="grid grid-cols-2 gap-2"
+                      role="radiogroup"
+                      aria-label="Experience Level"
+                    >
                       {[
                         { v: "student", l: "Student" },
                         { v: "junior", l: "Junior" },
@@ -219,12 +267,16 @@ export default function Assessment() {
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span>{o.l}</span>
-                            {form.experience === o.v ? <Check className="h-4 w-4 text-primary" /> : null}
+                            {form.experience === o.v ? (
+                              <Check className="h-4 w-4 text-primary" />
+                            ) : null}
                           </div>
                         </button>
                       ))}
                     </div>
-                    <Helper id="help-exp">This helps tailor the learning plan.</Helper>
+                    <Helper id="help-exp">
+                      This helps tailor the learning plan.
+                    </Helper>
                   </div>
                 </div>
 
@@ -244,11 +296,16 @@ export default function Assessment() {
                       "Healthcare",
                       "E-commerce",
                     ].map((ind) => (
-                      <label key={ind} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                      <label
+                        key={ind}
+                        className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"
+                      >
                         <Checkbox
                           checked={form.industries.includes(ind)}
                           onCheckedChange={(c) => {
-                            const next = c ? [...form.industries, ind] : form.industries.filter((x) => x !== ind);
+                            const next = c
+                              ? [...form.industries, ind]
+                              : form.industries.filter((x) => x !== ind);
                             update("industries", next as any);
                           }}
                           aria-label={ind}
@@ -257,19 +314,37 @@ export default function Assessment() {
                       </label>
                     ))}
                   </div>
-                  <Helper id="help-industries">Select multiple that excite you.</Helper>
+                  <Helper id="help-industries">
+                    Select multiple that excite you.
+                  </Helper>
                 </div>
 
                 {/* Coding languages */}
                 <div className="space-y-2">
                   <Label>Programming languages you know</Label>
                   <div className="grid grid-cols-3 gap-2">
-                    {["C", "C++", "JavaScript", "TypeScript", "Python", "Java", "Go", "Rust", "Kotlin", "Swift"].map((lang) => (
-                      <label key={lang} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                    {[
+                      "C",
+                      "C++",
+                      "JavaScript",
+                      "TypeScript",
+                      "Python",
+                      "Java",
+                      "Go",
+                      "Rust",
+                      "Kotlin",
+                      "Swift",
+                    ].map((lang) => (
+                      <label
+                        key={lang}
+                        className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"
+                      >
                         <Checkbox
                           checked={form.codingLanguages.includes(lang)}
                           onCheckedChange={(c) => {
-                            const next = c ? [...form.codingLanguages, lang] : form.codingLanguages.filter((x) => x !== lang);
+                            const next = c
+                              ? [...form.codingLanguages, lang]
+                              : form.codingLanguages.filter((x) => x !== lang);
                             update("codingLanguages", next as any);
                           }}
                           aria-label={lang}
@@ -300,11 +375,16 @@ export default function Assessment() {
                       "GCP",
                       "Figma",
                     ].map((tool) => (
-                      <label key={tool} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                      <label
+                        key={tool}
+                        className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"
+                      >
                         <Checkbox
                           checked={form.tools.includes(tool)}
                           onCheckedChange={(c) => {
-                            const next = c ? [...form.tools, tool] : form.tools.filter((x) => x !== tool);
+                            const next = c
+                              ? [...form.tools, tool]
+                              : form.tools.filter((x) => x !== tool);
                             update("tools", next as any);
                           }}
                           aria-label={tool}
@@ -319,33 +399,71 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Salary priority (1-5)</Label>
-                    <Slider value={[form.salaryPriority]} min={1} max={5} step={1} onValueChange={(v) => update("salaryPriority", v[0] as any)} />
+                    <Slider
+                      value={[form.salaryPriority]}
+                      min={1}
+                      max={5}
+                      step={1}
+                      onValueChange={(v) =>
+                        update("salaryPriority", v[0] as any)
+                      }
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Growth priority (1-5)</Label>
-                    <Slider value={[form.growthPriority]} min={1} max={5} step={1} onValueChange={(v) => update("growthPriority", v[0] as any)} />
+                    <Slider
+                      value={[form.growthPriority]}
+                      min={1}
+                      max={5}
+                      step={1}
+                      onValueChange={(v) =>
+                        update("growthPriority", v[0] as any)
+                      }
+                    />
                   </div>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-2">
                     <Label>Communication</Label>
-                    <Slider value={[form.softComm]} min={1} max={5} step={1} onValueChange={(v) => update("softComm", v[0] as any)} />
+                    <Slider
+                      value={[form.softComm]}
+                      min={1}
+                      max={5}
+                      step={1}
+                      onValueChange={(v) => update("softComm", v[0] as any)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Leadership</Label>
-                    <Slider value={[form.softLeader]} min={1} max={5} step={1} onValueChange={(v) => update("softLeader", v[0] as any)} />
+                    <Slider
+                      value={[form.softLeader]}
+                      min={1}
+                      max={5}
+                      step={1}
+                      onValueChange={(v) => update("softLeader", v[0] as any)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Teamwork</Label>
-                    <Slider value={[form.softTeam]} min={1} max={5} step={1} onValueChange={(v) => update("softTeam", v[0] as any)} />
+                    <Slider
+                      value={[form.softTeam]}
+                      min={1}
+                      max={5}
+                      step={1}
+                      onValueChange={(v) => update("softTeam", v[0] as any)}
+                    />
                   </div>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-1.5">
                     <Label>Preferred work style</Label>
-                    <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Work style">
+                    <div
+                      className="grid grid-cols-3 gap-2"
+                      role="radiogroup"
+                      aria-label="Work style"
+                    >
                       {["remote", "onsite", "hybrid"].map((w) => (
                         <button
                           key={w}
@@ -362,7 +480,11 @@ export default function Assessment() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>Willing to relocate?</Label>
-                    <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Relocate">
+                    <div
+                      className="grid grid-cols-3 gap-2"
+                      role="radiogroup"
+                      aria-label="Relocate"
+                    >
                       {["yes", "no", "maybe"].map((w) => (
                         <button
                           key={w}
@@ -379,7 +501,13 @@ export default function Assessment() {
                   </div>
                   <div className="space-y-2">
                     <Label>Available hours per week</Label>
-                    <Slider value={[form.timePerWeek]} min={1} max={40} step={1} onValueChange={(v) => update("timePerWeek", v[0] as any)} />
+                    <Slider
+                      value={[form.timePerWeek]}
+                      min={1}
+                      max={40}
+                      step={1}
+                      onValueChange={(v) => update("timePerWeek", v[0] as any)}
+                    />
                   </div>
                 </div>
 
@@ -390,16 +518,30 @@ export default function Assessment() {
                     <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button type="button" aria-label="Help for skills" className="text-muted-foreground">
+                          <button
+                            type="button"
+                            aria-label="Help for skills"
+                            className="text-muted-foreground"
+                          >
                             <HelpCircle className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>Comma-separated. Example: react, typescript, sql</TooltipContent>
+                        <TooltipContent>
+                          Comma-separated. Example: react, typescript, sql
+                        </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <Input id="skills" aria-describedby="help-skills" placeholder="react, typescript, sql" value={form.skills} onChange={(e) => update("skills", e.target.value)} />
-                  <Helper id="help-skills">Your strongest technical and soft skills.</Helper>
+                  <Input
+                    id="skills"
+                    aria-describedby="help-skills"
+                    placeholder="react, typescript, sql"
+                    value={form.skills}
+                    onChange={(e) => update("skills", e.target.value)}
+                  />
+                  <Helper id="help-skills">
+                    Your strongest technical and soft skills.
+                  </Helper>
                 </div>
 
                 <div className="space-y-1.5">
@@ -408,16 +550,30 @@ export default function Assessment() {
                     <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button type="button" aria-label="Help for interests" className="text-muted-foreground">
+                          <button
+                            type="button"
+                            aria-label="Help for interests"
+                            className="text-muted-foreground"
+                          >
                             <HelpCircle className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>Comma-separated. Example: ai/ml, product, fintech</TooltipContent>
+                        <TooltipContent>
+                          Comma-separated. Example: ai/ml, product, fintech
+                        </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <Input id="interests" aria-describedby="help-interests" placeholder="ai/ml, product, fintech" value={form.interests} onChange={(e) => update("interests", e.target.value)} />
-                  <Helper id="help-interests">Topics and domains you enjoy.</Helper>
+                  <Input
+                    id="interests"
+                    aria-describedby="help-interests"
+                    placeholder="ai/ml, product, fintech"
+                    value={form.interests}
+                    onChange={(e) => update("interests", e.target.value)}
+                  />
+                  <Helper id="help-interests">
+                    Topics and domains you enjoy.
+                  </Helper>
                 </div>
 
                 <div className="space-y-1.5">
@@ -427,29 +583,67 @@ export default function Assessment() {
                       <TooltipProvider delayDuration={100}>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <button type="button" aria-label="Supported files" className="text-muted-foreground">
+                            <button
+                              type="button"
+                              aria-label="Supported files"
+                              className="text-muted-foreground"
+                            >
                               <HelpCircle className="h-4 w-4" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Paste text or upload .txt/.md. PDF/DOCX support coming soon.</TooltipContent>
+                          <TooltipContent>
+                            Paste text or upload .txt/.md. PDF/DOCX support
+                            coming soon.
+                          </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </div>
                   </div>
-                  <Textarea id="resume" rows={5} value={form.resumeText} onChange={(e) => update("resumeText", e.target.value)} placeholder="Paste relevant resume content here..." />
-                  <Input ref={fileRef} type="file" accept=".txt,.md,.pdf,.doc,.docx" onChange={onFileChange} />
+                  <Textarea
+                    id="resume"
+                    rows={5}
+                    value={form.resumeText}
+                    onChange={(e) => update("resumeText", e.target.value)}
+                    placeholder="Paste relevant resume content here..."
+                  />
+                  <Input
+                    ref={fileRef}
+                    type="file"
+                    accept=".txt,.md,.pdf,.doc,.docx"
+                    onChange={onFileChange}
+                  />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="portfolio">Portfolio / GitHub (optional)</Label>
-                    <Input id="portfolio" placeholder="https://github.com/username" value={form.portfolio} onChange={(e) => update("portfolio", e.target.value)} />
+                    <Label htmlFor="portfolio">
+                      Portfolio / GitHub (optional)
+                    </Label>
+                    <Input
+                      id="portfolio"
+                      placeholder="https://github.com/username"
+                      value={form.portfolio}
+                      onChange={(e) => update("portfolio", e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="degree">Highest degree</Label>
-                    <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label="Degree">
+                    <div
+                      className="grid grid-cols-4 gap-2"
+                      role="radiogroup"
+                      aria-label="Degree"
+                    >
                       {["none", "bachelor", "master", "phd"].map((d) => (
-                        <button key={d} type="button" role="radio" aria-checked={form.degree === d} onClick={() => update("degree", d as any)} className={`rounded-md border px-3 py-2 text-sm ${form.degree === d ? "border-primary bg-primary/10" : "hover:bg-accent"}`}>{d}</button>
+                        <button
+                          key={d}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.degree === d}
+                          onClick={() => update("degree", d as any)}
+                          className={`rounded-md border px-3 py-2 text-sm ${form.degree === d ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
+                        >
+                          {d}
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -457,26 +651,51 @@ export default function Assessment() {
 
                 <div className="space-y-2">
                   <Label htmlFor="certs">Certifications (optional)</Label>
-                  <Input id="certs" placeholder="AWS CCP, Google Data Analytics" value={form.certifications} onChange={(e) => update("certifications", e.target.value)} />
+                  <Input
+                    id="certs"
+                    placeholder="AWS CCP, Google Data Analytics"
+                    value={form.certifications}
+                    onChange={(e) => update("certifications", e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="goals">Career goals</Label>
-                  <Textarea id="goals" rows={3} placeholder="Short/long-term goals..." value={form.goals} onChange={(e) => update("goals", e.target.value)} />
+                  <Textarea
+                    id="goals"
+                    rows={3}
+                    placeholder="Short/long-term goals..."
+                    value={form.goals}
+                    onChange={(e) => update("goals", e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="constraints">Constraints</Label>
-                  <Textarea id="constraints" rows={3} placeholder="Time, location, finances, etc." value={form.constraints} onChange={(e) => update("constraints", e.target.value)} />
+                  <Textarea
+                    id="constraints"
+                    rows={3}
+                    placeholder="Time, location, finances, etc."
+                    value={form.constraints}
+                    onChange={(e) => update("constraints", e.target.value)}
+                  />
                 </div>
 
                 {Object.values(errors).length ? (
-                  <div role="alert" aria-live="assertive" className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+                  <div
+                    role="alert"
+                    aria-live="assertive"
+                    className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive"
+                  >
                     {Object.values(errors)[0]}
                   </div>
                 ) : null}
                 {apiError ? (
-                  <div role="alert" aria-live="assertive" className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+                  <div
+                    role="alert"
+                    aria-live="assertive"
+                    className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive"
+                  >
                     {apiError}
                   </div>
                 ) : null}
@@ -496,7 +715,10 @@ export default function Assessment() {
                     type="button"
                     variant="secondary"
                     onClick={() => {
-                      localStorage.setItem("mentorai_last_inputs", JSON.stringify(form));
+                      localStorage.setItem(
+                        "mentorai_last_inputs",
+                        JSON.stringify(form),
+                      );
                     }}
                   >
                     Save inputs locally
@@ -511,11 +733,20 @@ export default function Assessment() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>What would you like to do?</DialogTitle>
-                <DialogDescription>Select an option to proceed with your responses.</DialogDescription>
+                <DialogDescription>
+                  Select an option to proceed with your responses.
+                </DialogDescription>
               </DialogHeader>
               <div className="grid gap-2 sm:grid-cols-2">
-                <Button onClick={() => navigate("/suggestions")}>Get AI Suggestions</Button>
-                <Button variant="outline" onClick={() => navigate("/resume-analyzer")}>Analyze Responses</Button>
+                <Button onClick={() => navigate("/suggestions")}>
+                  Get AI Suggestions
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/resume-analyzer")}
+                >
+                  Analyze Responses
+                </Button>
               </div>
             </DialogContent>
           </Dialog>

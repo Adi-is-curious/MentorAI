@@ -20,6 +20,10 @@ export interface AnalyzeRequest {
 export interface AnalyzeResponse {
   suggestions: { domain: string; reason: string }[];
   skillGaps: string[];
-  learningPath: { title: string; type: "course" | "article" | "project"; url?: string }[];
+  learningPath: {
+    title: string;
+    type: "course" | "article" | "project";
+    url?: string;
+  }[];
   summary: string;
 }

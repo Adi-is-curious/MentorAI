@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import type { AnalyzeResponse } from "@shared/api";
@@ -11,15 +17,26 @@ export default function Dashboard() {
 
   useEffect(() => {
     const i = localStorage.getItem("mentorai_last_inputs");
-    if (i) { try { setInputs(JSON.parse(i)); } catch {} }
+    if (i) {
+      try {
+        setInputs(JSON.parse(i));
+      } catch {}
+    }
     const r = localStorage.getItem("mentorai_last_result");
-    if (r) { try { setResult(JSON.parse(r)); } catch {} }
+    if (r) {
+      try {
+        setResult(JSON.parse(r));
+      } catch {}
+    }
   }, []);
 
   const progress = useMemo(() => {
     const total = 12; // canonical skills size used on server
     const gaps = result?.skillGaps?.length ?? total;
-    const pct = Math.max(0, Math.min(100, 100 - Math.round((gaps / total) * 100)));
+    const pct = Math.max(
+      0,
+      Math.min(100, 100 - Math.round((gaps / total) * 100)),
+    );
     return pct;
   }, [result]);
 
@@ -29,17 +46,25 @@ export default function Dashboard() {
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle>Overview</CardTitle>
-            <CardDescription>Summary of your latest quiz and analysis</CardDescription>
+            <CardDescription>
+              Summary of your latest quiz and analysis
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid gap-2 sm:grid-cols-2">
               <div>
-                <div className="text-sm text-muted-foreground">Preferred Track</div>
-                <div className="text-lg font-medium">{inputs?.rolePref ?? "—"}</div>
+                <div className="text-sm text-muted-foreground">
+                  Preferred Track
+                </div>
+                <div className="text-lg font-medium">
+                  {inputs?.rolePref ?? "—"}
+                </div>
               </div>
               <div>
                 <div className="text-sm text-muted-foreground">Experience</div>
-                <div className="text-lg font-medium">{inputs?.experience ?? "—"}</div>
+                <div className="text-lg font-medium">
+                  {inputs?.experience ?? "—"}
+                </div>
               </div>
             </div>
             <div>
@@ -50,9 +75,15 @@ export default function Dashboard() {
               <Progress value={progress} />
             </div>
             <div className="flex gap-2">
-              <Button asChild><Link to="/resume-analyzer">Re-run Analyzer</Link></Button>
-              <Button asChild variant="outline"><Link to="/resources">Resources</Link></Button>
-              <Button asChild variant="secondary"><Link to="/">Edit answers</Link></Button>
+              <Button asChild>
+                <Link to="/resume-analyzer">Re-run Analyzer</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/resources">Resources</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link to="/">Edit answers</Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -64,9 +95,15 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
-              {result?.suggestions?.slice(0,3).map((s) => (
-                <li key={s.domain}>{s.domain} — {s.reason}</li>
-              )) ?? <li className="text-muted-foreground">Run Analyzer to see suggestions.</li>}
+              {result?.suggestions?.slice(0, 3).map((s) => (
+                <li key={s.domain}>
+                  {s.domain} — {s.reason}
+                </li>
+              )) ?? (
+                <li className="text-muted-foreground">
+                  Run Analyzer to see suggestions.
+                </li>
+              )}
             </ul>
           </CardContent>
         </Card>

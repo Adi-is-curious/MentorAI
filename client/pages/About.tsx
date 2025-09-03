@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const team = [
   { name: "Aditya", role: "Founder & CEO", initials: "AK" },
@@ -12,9 +18,13 @@ export default function About() {
     <section className="container py-12">
       <div className="mx-auto max-w-4xl space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight">About MentorAI</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight">
+            About MentorAI
+          </h1>
           <p className="mt-2 text-muted-foreground">
-            MentorAI is an AI-powered career mentor helping individuals discover their best-fit career paths, close skill gaps, and grow with a clear roadmap.
+            MentorAI is an AI-powered career mentor helping individuals discover
+            their best-fit career paths, close skill gaps, and grow with a clear
+            roadmap.
           </p>
         </div>
 
@@ -22,12 +32,16 @@ export default function About() {
           <CardHeader>
             <CardTitle>Our Mission</CardTitle>
             <CardDescription>
-              Democratize career guidance with personalized insights, accessible learning resources, and a delightful experience.
+              Democratize career guidance with personalized insights, accessible
+              learning resources, and a delightful experience.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p>
-              We blend user input, resume understanding, and AI models to generate suggestions, highlight missing skills, and curate actionable learning plans. Our vision is to make expert-level career coaching available to everyone.
+              We blend user input, resume understanding, and AI models to
+              generate suggestions, highlight missing skills, and curate
+              actionable learning plans. Our vision is to make expert-level
+              career coaching available to everyone.
             </p>
           </CardContent>
         </Card>
@@ -43,7 +57,9 @@ export default function About() {
                   </div>
                   <div>
                     <div className="font-semibold">{m.name}</div>
-                    <div className="text-sm text-muted-foreground">{m.role}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {m.role}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

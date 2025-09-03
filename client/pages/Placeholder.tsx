@@ -26,7 +26,10 @@ export default function Placeholder() {
         <div className="container py-16">
           <div className="mx-auto max-w-3xl text-center mb-10">
             <h1 className="text-3xl font-extrabold tracking-tight">Contact</h1>
-            <p className="text-muted-foreground mt-2">We'd love to hear from you. Reach out for questions, feedback, or collaboration ideas.</p>
+            <p className="text-muted-foreground mt-2">
+              We'd love to hear from you. Reach out for questions, feedback, or
+              collaboration ideas.
+            </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
@@ -35,14 +38,23 @@ export default function Placeholder() {
                 <CardTitle>General Inquiries</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <p>Email us anytime and we'll respond within 1–2 business days.</p>
+                <p>
+                  Email us anytime and we'll respond within 1–2 business days.
+                </p>
                 <div className="flex items-center gap-2 text-foreground">
                   <span className="font-medium">Email:</span>
-                  <a className="underline underline-offset-4" href="mailto:aditya.aloe29@gmail.com?subject=Inquiry%20from%20MentorAI%20website">aditya.aloe29@gmail.com</a>
+                  <a
+                    className="underline underline-offset-4"
+                    href="mailto:aditya.aloe29@gmail.com?subject=Inquiry%20from%20MentorAI%20website"
+                  >
+                    aditya.aloe29@gmail.com
+                  </a>
                 </div>
                 <div className="flex gap-3 pt-2">
                   <Button asChild>
-                    <a href="mailto:aditya.aloe29@gmail.com?subject=Inquiry%20from%20MentorAI%20website">Send an email</a>
+                    <a href="mailto:aditya.aloe29@gmail.com?subject=Inquiry%20from%20MentorAI%20website">
+                      Send an email
+                    </a>
                   </Button>
                   <Button asChild variant="outline">
                     <Link to="/faq">Visit FAQ</Link>
@@ -56,7 +68,10 @@ export default function Placeholder() {
                 <CardTitle>Support & Feedback</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <p>Report issues, request features, or share suggestions to improve MentorAI.</p>
+                <p>
+                  Report issues, request features, or share suggestions to
+                  improve MentorAI.
+                </p>
                 <ul className="list-disc pl-5">
                   <li>Bug reports with steps to reproduce</li>
                   <li>Feature requests and use-cases</li>
@@ -64,7 +79,9 @@ export default function Placeholder() {
                 </ul>
                 <div className="pt-2">
                   <Button asChild variant="secondary">
-                    <a href="mailto:aditya.aloe29@gmail.com?subject=Support%20request%20-%20MentorAI">Email Support</a>
+                    <a href="mailto:aditya.aloe29@gmail.com?subject=Support%20request%20-%20MentorAI">
+                      Email Support
+                    </a>
                   </Button>
                 </div>
               </CardContent>
@@ -78,13 +95,27 @@ export default function Placeholder() {
                 <p>Follow and connect for updates and community.</p>
                 <div className="flex flex-wrap gap-3">
                   <Button asChild variant="outline">
-                    <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
+                    <a
+                      href="https://www.linkedin.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      LinkedIn
+                    </a>
                   </Button>
                   <Button asChild variant="outline">
-                    <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+                    <a
+                      href="https://github.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      GitHub
+                    </a>
                   </Button>
                   <Button asChild variant="outline">
-                    <a href="https://x.com/" target="_blank" rel="noreferrer">X (Twitter)</a>
+                    <a href="https://x.com/" target="_blank" rel="noreferrer">
+                      X (Twitter)
+                    </a>
                   </Button>
                 </div>
               </CardContent>

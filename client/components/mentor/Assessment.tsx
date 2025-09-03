@@ -7,20 +7,48 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
-import { AnimatePresence, motion } from "framer-motion";
-import type { AnalyzeResponse } from "@shared/api";
-import { Check, HelpCircle, Loader2, Download } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useNavigate } from "react-router-dom";
+import { Check, HelpCircle } from "lucide-react";
 
-const schema = z.object({
-  skills: z.string().optional().default(""),
-  interests: z.string().optional().default(""),
-  resumeText: z.string().optional().default(""),
-  rolePref: z.enum(["engineering","data","design","product","other"]).default("engineering"),
-  experience: z.enum(["student","junior","mid","senior"]).default("junior"),
-}).refine((val) => (val.skills?.trim() || val.interests?.trim() || val.resumeText?.trim()), {
-  message: "Provide at least one: skills, interests, or resume text.",
-  path: ["skills"],
-});
+const schema = z
+  .object({
+    skills: z.string().optional().default(""),
+    interests: z.string().optional().default(""),
+    resumeText: z.string().optional().default(""),
+    rolePref: z.enum(["engineering", "data", "design", "product", "other"]).default("engineering"),
+    experience: z.enum(["student", "junior", "mid", "senior"]).default("junior"),
+    industries: z.array(z.string()).default([]),
+    codingLanguages: z.array(z.string()).default([]),
+    tools: z.array(z.string()).default([]),
+    workStyle: z.enum(["remote", "onsite", "hybrid"]).default("remote"),
+    relocate: z.enum(["yes", "no", "maybe"]).default("maybe"),
+    salaryPriority: z.number().min(1).max(5).default(3),
+    growthPriority: z.number().min(1).max(5).default(4),
+    softComm: z.number().min(1).max(5).default(3),
+    softLeader: z.number().min(1).max(5).default(3),
+    softTeam: z.number().min(1).max(5).default(4),
+    timePerWeek: z.number().min(1).max(40).default(8),
+    degree: z.enum(["none", "bachelor", "master", "phd"]).default("bachelor"),
+    certifications: z.string().optional().default(""),
+    portfolio: z.string().optional().default(""),
+    goals: z.string().optional().default(""),
+    constraints: z.string().optional().default(""),
+  })
+  .refine(
+    (val) =>
+      val.skills?.trim() ||
+      val.interests?.trim() ||
+      val.resumeText?.trim() ||
+      val.industries.length > 0 ||
+      val.codingLanguages.length > 0,
+    {
+      message: "Provide some background: fill skills/interests or select industries/languages.",
+      path: ["skills"],
+    },
+  );
 
 function Helper({ id, children }: { id: string; children: React.ReactNode }) {
   return (
@@ -30,26 +58,44 @@ function Helper({ id, children }: { id: string; children: React.ReactNode }) {
   );
 }
 
-function Pill({ children }: { children: React.ReactNode }) {
-  return <span className="rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground">{children}</span>;
-}
-
 export default function Assessment() {
-  const [form, setForm] = useState({ skills: "", interests: "", resumeText: "", rolePref: "engineering", experience: "junior" } as z.infer<typeof schema>);
+  const [form, setForm] = useState<z.infer<typeof schema>>({
+    skills: "",
+    interests: "",
+    resumeText: "",
+    rolePref: "engineering",
+    experience: "junior",
+    industries: [],
+    codingLanguages: [],
+    tools: [],
+    workStyle: "remote",
+    relocate: "maybe",
+    salaryPriority: 3,
+    growthPriority: 4,
+    softComm: 3,
+    softLeader: 3,
+    softTeam: 4,
+    timePerWeek: 8,
+    degree: "bachelor",
+    certifications: "",
+    portfolio: "",
+    goals: "",
+    constraints: "",
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [choiceOpen, setChoiceOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const saved = localStorage.getItem("mentorai_last_inputs");
     if (saved) {
-      try { setForm({ ...form, ...JSON.parse(saved) }); } catch {}
+      try {
+        setForm((f) => ({ ...f, ...JSON.parse(saved) }));
+      } catch {}
     }
-    const savedRes = localStorage.getItem("mentorai_last_result");
-    if (savedRes) { try { setResult(JSON.parse(savedRes)); } catch {} }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function update<K extends keyof typeof form>(k: K, v: (typeof form)[K]) {
@@ -65,7 +111,7 @@ export default function Assessment() {
     setErrors(newErrors);
   }
 
-  const progress = useMemo(() => (loading ? 66 : result ? 100 : 0), [loading, result]);
+  const progress = useMemo(() => (loading ? 66 : 0), [loading]);
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -96,50 +142,14 @@ export default function Assessment() {
     }
     setLoading(true);
     setApiError(null);
-    setResult(null);
     try {
-      const res = await fetch("/api/ai/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      const data = (await res.json()) as AnalyzeResponse;
-      setResult(data);
       localStorage.setItem("mentorai_last_inputs", JSON.stringify(parsed.data));
-      localStorage.setItem("mentorai_last_result", JSON.stringify(data));
+      setChoiceOpen(true);
     } catch (err) {
-      setApiError("Could not analyze at the moment. Please try again.");
+      setApiError("Unable to save your responses locally.");
     } finally {
       setLoading(false);
     }
-  }
-
-  function exportJSON() {
-    if (!result) return;
-    const blob = new Blob([JSON.stringify({ inputs: form, result }, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "mentorai-results.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function exportCSV() {
-    if (!result) return;
-    const rows = [
-      ["Step", "Title", "Type", "URL"],
-      ...result.learningPath.map((r, i) => [String(i + 1), r.title, r.type, r.url ?? ""]) ,
-    ];
-    const csv = rows.map((r) => r.map((c) => `"${String(c).replaceAll('"','""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "mentorai-roadmap.csv";
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
   return (
@@ -149,7 +159,7 @@ export default function Assessment() {
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">AI Skill Assessment</CardTitle>
-              <CardDescription>Answer a few questions. Tooltips explain each field.</CardDescription>
+              <CardDescription>Answer in-depth questions. Tooltips explain each field.</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-5" onSubmit={onSubmit} aria-describedby="form-help">
@@ -218,6 +228,161 @@ export default function Assessment() {
                   </div>
                 </div>
 
+                {/* Interests: industries */}
+                <div className="space-y-2">
+                  <Label>Industries you are interested in</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      "Web Development",
+                      "Mobile Apps",
+                      "Data Science",
+                      "AI/ML",
+                      "Cloud/DevOps",
+                      "Cybersecurity",
+                      "Game Dev",
+                      "Fintech",
+                      "Healthcare",
+                      "E-commerce",
+                    ].map((ind) => (
+                      <label key={ind} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                        <Checkbox
+                          checked={form.industries.includes(ind)}
+                          onCheckedChange={(c) => {
+                            const next = c ? [...form.industries, ind] : form.industries.filter((x) => x !== ind);
+                            update("industries", next as any);
+                          }}
+                          aria-label={ind}
+                        />
+                        <span>{ind}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <Helper id="help-industries">Select multiple that excite you.</Helper>
+                </div>
+
+                {/* Coding languages */}
+                <div className="space-y-2">
+                  <Label>Programming languages you know</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {["C", "C++", "JavaScript", "TypeScript", "Python", "Java", "Go", "Rust", "Kotlin", "Swift"].map((lang) => (
+                      <label key={lang} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                        <Checkbox
+                          checked={form.codingLanguages.includes(lang)}
+                          onCheckedChange={(c) => {
+                            const next = c ? [...form.codingLanguages, lang] : form.codingLanguages.filter((x) => x !== lang);
+                            update("codingLanguages", next as any);
+                          }}
+                          aria-label={lang}
+                        />
+                        <span>{lang}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tools */}
+                <div className="space-y-2">
+                  <Label>Tools & frameworks you've used</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      "React",
+                      "Node",
+                      "Express",
+                      "Django",
+                      "Flask",
+                      "TensorFlow",
+                      "PyTorch",
+                      "Postgres",
+                      "MongoDB",
+                      "Docker",
+                      "Kubernetes",
+                      "AWS",
+                      "GCP",
+                      "Figma",
+                    ].map((tool) => (
+                      <label key={tool} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                        <Checkbox
+                          checked={form.tools.includes(tool)}
+                          onCheckedChange={(c) => {
+                            const next = c ? [...form.tools, tool] : form.tools.filter((x) => x !== tool);
+                            update("tools", next as any);
+                          }}
+                          aria-label={tool}
+                        />
+                        <span>{tool}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Preferences sliders */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Salary priority (1-5)</Label>
+                    <Slider value={[form.salaryPriority]} min={1} max={5} step={1} onValueChange={(v) => update("salaryPriority", v[0] as any)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Growth priority (1-5)</Label>
+                    <Slider value={[form.growthPriority]} min={1} max={5} step={1} onValueChange={(v) => update("growthPriority", v[0] as any)} />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label>Communication</Label>
+                    <Slider value={[form.softComm]} min={1} max={5} step={1} onValueChange={(v) => update("softComm", v[0] as any)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Leadership</Label>
+                    <Slider value={[form.softLeader]} min={1} max={5} step={1} onValueChange={(v) => update("softLeader", v[0] as any)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Teamwork</Label>
+                    <Slider value={[form.softTeam]} min={1} max={5} step={1} onValueChange={(v) => update("softTeam", v[0] as any)} />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="space-y-1.5">
+                    <Label>Preferred work style</Label>
+                    <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Work style">
+                      {["remote", "onsite", "hybrid"].map((w) => (
+                        <button
+                          key={w}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.workStyle === w}
+                          onClick={() => update("workStyle", w as any)}
+                          className={`rounded-md border px-3 py-2 text-sm ${form.workStyle === w ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
+                        >
+                          {w}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Willing to relocate?</Label>
+                    <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Relocate">
+                      {["yes", "no", "maybe"].map((w) => (
+                        <button
+                          key={w}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.relocate === w}
+                          onClick={() => update("relocate", w as any)}
+                          className={`rounded-md border px-3 py-2 text-sm ${form.relocate === w ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
+                        >
+                          {w}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Available hours per week</Label>
+                    <Slider value={[form.timePerWeek]} min={1} max={40} step={1} onValueChange={(v) => update("timePerWeek", v[0] as any)} />
+                  </div>
+                </div>
+
                 {/* Text inputs */}
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
@@ -256,7 +421,7 @@ export default function Assessment() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="resume">Resume text (optional)</Label>
                       <TooltipProvider delayDuration={100}>
@@ -270,12 +435,39 @@ export default function Assessment() {
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Pill>Optional</Pill>
-                    </div>
                   </div>
                   <Textarea id="resume" rows={5} value={form.resumeText} onChange={(e) => update("resumeText", e.target.value)} placeholder="Paste relevant resume content here..." />
                   <Input ref={fileRef} type="file" accept=".txt,.md,.pdf,.doc,.docx" onChange={onFileChange} />
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="portfolio">Portfolio / GitHub (optional)</Label>
+                    <Input id="portfolio" placeholder="https://github.com/username" value={form.portfolio} onChange={(e) => update("portfolio", e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="degree">Highest degree</Label>
+                    <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label="Degree">
+                      {["none", "bachelor", "master", "phd"].map((d) => (
+                        <button key={d} type="button" role="radio" aria-checked={form.degree === d} onClick={() => update("degree", d as any)} className={`rounded-md border px-3 py-2 text-sm ${form.degree === d ? "border-primary bg-primary/10" : "hover:bg-accent"}`}>{d}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="certs">Certifications (optional)</Label>
+                  <Input id="certs" placeholder="AWS CCP, Google Data Analytics" value={form.certifications} onChange={(e) => update("certifications", e.target.value)} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="goals">Career goals</Label>
+                  <Textarea id="goals" rows={3} placeholder="Short/long-term goals..." value={form.goals} onChange={(e) => update("goals", e.target.value)} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="constraints">Constraints</Label>
+                  <Textarea id="constraints" rows={3} placeholder="Time, location, finances, etc." value={form.constraints} onChange={(e) => update("constraints", e.target.value)} />
                 </div>
 
                 {Object.values(errors).length ? (
@@ -298,9 +490,15 @@ export default function Assessment() {
 
                 <div className="flex flex-wrap gap-3">
                   <Button type="submit" aria-busy={loading} disabled={loading}>
-                    {loading ? (<span className="inline-flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Analyzing...</span>) : "Analyze & get suggestions"}
+                    Continue
                   </Button>
-                  <Button type="button" variant="secondary" onClick={() => { localStorage.setItem("mentorai_last_inputs", JSON.stringify(form)); }}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => {
+                      localStorage.setItem("mentorai_last_inputs", JSON.stringify(form));
+                    }}
+                  >
                     Save inputs locally
                   </Button>
                 </div>
@@ -308,60 +506,19 @@ export default function Assessment() {
             </CardContent>
           </Card>
 
-          <AnimatePresence>
-            {result ? (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-xl">Personalized Suggestions</CardTitle>
-                    <CardDescription>Download your roadmap or save the JSON</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-medium">Suggested Careers</h4>
-                      <ul className="mt-2 space-y-2">
-                        {result.suggestions.map((s) => (
-                          <li key={s.domain} className="flex items-start gap-2">
-                            <span className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">✓</span>
-                            <span><span className="font-semibold">{s.domain}.</span> {s.reason}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-medium">Skill Gaps</h4>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {result.skillGaps.map((g) => (
-                          <span key={g} className="rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground">{g}</span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-sm font-medium">Learning Roadmap</h4>
-                      <ol className="mt-2 space-y-2">
-                        {result.learningPath.map((i, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm">
-                            <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{idx + 1}</span>
-                            {i.url ? (
-                              <a href={i.url} className="underline underline-offset-4" target="_blank" rel="noreferrer">{i.title}</a>
-                            ) : (<span>{i.title}</span>)}
-                            <Pill>{i.type}</Pill>
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      <Button onClick={exportJSON}><Download className="mr-2 h-4 w-4" /> Export JSON</Button>
-                      <Button variant="outline" onClick={exportCSV}><Download className="mr-2 h-4 w-4" /> Download roadmap CSV</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+          {/* Choice dialog */}
+          <Dialog open={choiceOpen} onOpenChange={setChoiceOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>What would you like to do?</DialogTitle>
+                <DialogDescription>Select an option to proceed with your responses.</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <Button onClick={() => navigate("/suggestions")}>Get AI Suggestions</Button>
+                <Button variant="outline" onClick={() => navigate("/resume-analyzer")}>Analyze Responses</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </section>

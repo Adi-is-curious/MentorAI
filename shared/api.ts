@@ -10,3 +10,16 @@
 export interface DemoResponse {
   message: string;
 }
+
+export interface AnalyzeRequest {
+  skills: string;
+  interests: string;
+  resumeText?: string;
+}
+
+export interface AnalyzeResponse {
+  suggestions: { domain: string; reason: string }[];
+  skillGaps: string[];
+  learningPath: { title: string; type: "course" | "article" | "project"; url?: string }[];
+  summary: string;
+}

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ShieldCheck, Upload, LineChart, CheckCircle2 } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 export default function Index() {
   return (
@@ -71,59 +72,122 @@ export default function Index() {
         ))}
       </section>
 
-      {/* Textual info about resumes */}
+      {/* Spotlight slider */}
       <section className="border-t bg-gradient-to-b from-background via-background to-accent/20">
-        <div className="container grid gap-6 py-16 md:grid-cols-2">
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold tracking-tight">Why an ATS‑friendly resume matters</h2>
-            <p className="text-muted-foreground">
-              Recruiters use Applicant Tracking Systems (ATS) to parse and rank resumes. A clear structure, relevant keywords, and clean formatting
-              ensure your profile isn’t filtered out before a human ever sees it.
-            </p>
-            <ul className="list-disc pl-5 text-muted-foreground">
-              <li>Use standard section titles: Summary, Experience, Education, Skills.</li>
-              <li>Quantify impact with metrics and action verbs.</li>
-              <li>Match job description keywords naturally.</li>
-              <li>Avoid heavy graphics, tables, or unusual fonts.</li>
-            </ul>
-            <div className="flex gap-3 pt-2">
-              <Button asChild><Link to="/resume-analyzer">Analyze my resume</Link></Button>
-              <Button asChild variant="outline"><Link to="/resources">See sample roadmaps</Link></Button>
-            </div>
+        <div className="container py-16">
+          <div className="mb-6 text-center">
+            <h2 className="text-2xl font-bold tracking-tight">Career & Resume Spotlights</h2>
+            <p className="text-muted-foreground">Swipe through quick guides on hot roles and resume success.</p>
           </div>
-          <Card>
-            <CardHeader>
-              <CardTitle>How to structure your resume</CardTitle>
-              <CardDescription>Simple, scannable, and keyword‑aware</CardDescription>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
-              <p>1. Header with name, role, location, contact, GitHub/LinkedIn.</p>
-              <p>2. 2–3 line summary highlighting core skills and domain.</p>
-              <p>3. Experience: bullets with action + impact + metric.</p>
-              <p>4. Skills: grouped (Languages, Frameworks, Tools, Cloud).</p>
-              <p>5. Education/Certifications: most recent first.</p>
-            </CardContent>
-          </Card>
+          <div className="relative mx-auto max-w-5xl">
+            <Carousel className="px-12">
+              <CarouselContent>
+                <CarouselItem>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Why an ATS‑friendly resume matters</CardTitle>
+                      <CardDescription>Get past filters and in front of recruiters</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="list-disc pl-5">
+                        <li>Use standard sections (Summary, Experience, Education, Skills).</li>
+                        <li>Quantify impact with metrics and action verbs.</li>
+                        <li>Match job description keywords naturally.</li>
+                        <li>Avoid graphics-heavy templates or unusual fonts.</li>
+                      </ul>
+                      <div className="pt-3 flex gap-3">
+                        <Button asChild><Link to="/resume-analyzer">Analyze my resume</Link></Button>
+                        <Button asChild variant="outline"><Link to="/resources">See roadmaps</Link></Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+                <CarouselItem>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>GenAI Engineer & Prompt Engineering</CardTitle>
+                      <CardDescription>Blend ML foundations with LLM tooling</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="list-disc pl-5">
+                        <li>Skills: Python/TS, vector DBs, prompt design, evaluation, RAG.</li>
+                        <li>Tools: OpenAI/HF APIs, LangChain/LlamaIndex, orchestration.</li>
+                        <li>Portfolio: chatbots, retrieval apps, agents with guardrails.</li>
+                      </ul>
+                      <div className="pt-3 flex gap-3">
+                        <Button asChild><Link to="/quiz">Find fit via quiz</Link></Button>
+                        <Button asChild variant="outline"><Link to="/suggestions">Get AI suggestions</Link></Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+                <CarouselItem>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Cybersecurity Analyst demand is rising</CardTitle>
+                      <CardDescription>Threat detection, blue teaming, and cloud security</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="list-disc pl-5">
+                        <li>Skills: networking, SIEM, threat modeling, scripting.</li>
+                        <li>Certs: Security+, CySA+, AZ-500, practical labs.</li>
+                        <li>Path: SOC → Incident Response → Cloud Security.</li>
+                      </ul>
+                      <div className="pt-3 flex gap-3">
+                        <Button asChild><Link to="/resources">View learning resources</Link></Button>
+                        <Button asChild variant="outline"><Link to="/quiz">Check your fit</Link></Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
         </div>
       </section>
 
-      {/* Blogs */}
+      {/* Career path spotlights + Blogs */}
       <section className="container py-16">
         <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold tracking-tight">Blogs & Guides</h2>
-          <p className="text-muted-foreground">Learn how to craft a standout, ATS‑friendly resume.</p>
+          <h2 className="text-2xl font-bold tracking-tight">Explore Career Paths</h2>
+          <p className="text-muted-foreground">Curated reads on AI/ML, GenAI, Security, Backend, Prompt Engineering, and Cloud.</p>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {[{
-            title: "Why resumes still matter in the AI era",
-            excerpt: "Understand how recruiters screen and why clarity beats buzzwords.",
-          },{
-            title: "ATS‑friendly formatting: do’s and don’ts",
-            excerpt: "Practical tips for templates, fonts, and section ordering.",
-          },{
-            title: "From bullet to impact: writing experience like a pro",
-            excerpt: "Turn tasks into quantified achievements with simple formulas.",
-          }].map((b,i)=> (
+          {[
+            { title: "AI/ML Engineer", text: "Math + Python + ML systems; build models and data pipelines." },
+            { title: "GenAI Engineer", text: "LLM apps, RAG, evaluation, safety, and prompt design." },
+            { title: "Security Analyst", text: "Detect threats, harden systems, and respond to incidents." },
+            { title: "Backend Engineer", text: "APIs, databases, scalability, reliability, and testing." },
+            { title: "Prompt Engineer", text: "Instruction crafting, tools, and evaluation for LLMs." },
+            { title: "AWS Cloud Engineer", text: "Infra-as-code, networking, observability, and cost control." },
+          ].map((c, i) => (
+            <Card key={i}>
+              <CardHeader>
+                <CardTitle className="text-lg">{c.title}</CardTitle>
+                <CardDescription>{c.text}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-3">
+                  <Button asChild><Link to="/quiz">Check your fit</Link></Button>
+                  <Button asChild variant="outline"><Link to="/resources">Learn more</Link></Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mt-12 mb-6 text-center">
+          <h3 className="text-xl font-semibold tracking-tight">Blogs & Guides</h3>
+          <p className="text-muted-foreground">Resume tips and general career advice.</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            { title: "Why resumes still matter in the AI era", excerpt: "How recruiters screen and why clarity beats buzzwords." },
+            { title: "ATS‑friendly formatting: do’s and don’ts", excerpt: "Templates, fonts, section ordering that work." },
+            { title: "From bullet to impact: writing experience like a pro", excerpt: "Turn tasks into quantified achievements." },
+          ].map((b, i) => (
             <Card key={i}>
               <CardHeader>
                 <CardTitle className="text-lg">{b.title}</CardTitle>

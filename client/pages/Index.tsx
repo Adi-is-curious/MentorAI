@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ShieldCheck, Upload, LineChart, CheckCircle2 } from "lucide-react";
-import Assessment from "@/components/mentor/Assessment";
 
 export default function Index() {
   return (
@@ -27,10 +26,10 @@ export default function Index() {
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="shadow">
-                <Link to="#quiz">Start free career quiz</Link>
+                <Link to="/quiz">Take the Career Quiz</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/auth">Sign in</Link>
+                <Link to="/resources">Explore resources</Link>
               </Button>
             </div>
             <div className="flex items-center gap-4 pt-2 text-sm text-muted-foreground">
@@ -72,15 +71,85 @@ export default function Index() {
         ))}
       </section>
 
-      {/* Quiz */}
-      <section id="quiz" className="relative border-t bg-gradient-to-b from-background via-background to-accent/20">
-        <div className="container py-16">
-          <div className="mx-auto max-w-5xl">
-            <div className="mb-8 text-center">
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">AI Skill Assessment & Career Suggestions</h2>
-              <p className="mt-2 text-muted-foreground">Interactive questionnaire, resume upload, and AI-powered results.</p>
+      {/* Textual info about resumes */}
+      <section className="border-t bg-gradient-to-b from-background via-background to-accent/20">
+        <div className="container grid gap-6 py-16 md:grid-cols-2">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold tracking-tight">Why an ATS‑friendly resume matters</h2>
+            <p className="text-muted-foreground">
+              Recruiters use Applicant Tracking Systems (ATS) to parse and rank resumes. A clear structure, relevant keywords, and clean formatting
+              ensure your profile isn’t filtered out before a human ever sees it.
+            </p>
+            <ul className="list-disc pl-5 text-muted-foreground">
+              <li>Use standard section titles: Summary, Experience, Education, Skills.</li>
+              <li>Quantify impact with metrics and action verbs.</li>
+              <li>Match job description keywords naturally.</li>
+              <li>Avoid heavy graphics, tables, or unusual fonts.</li>
+            </ul>
+            <div className="flex gap-3 pt-2">
+              <Button asChild><Link to="/resume-analyzer">Analyze my resume</Link></Button>
+              <Button asChild variant="outline"><Link to="/resources">See sample roadmaps</Link></Button>
             </div>
-            <Assessment />
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>How to structure your resume</CardTitle>
+              <CardDescription>Simple, scannable, and keyword‑aware</CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-2">
+              <p>1. Header with name, role, location, contact, GitHub/LinkedIn.</p>
+              <p>2. 2–3 line summary highlighting core skills and domain.</p>
+              <p>3. Experience: bullets with action + impact + metric.</p>
+              <p>4. Skills: grouped (Languages, Frameworks, Tools, Cloud).</p>
+              <p>5. Education/Certifications: most recent first.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Blogs */}
+      <section className="container py-16">
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl font-bold tracking-tight">Blogs & Guides</h2>
+          <p className="text-muted-foreground">Learn how to craft a standout, ATS‑friendly resume.</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {[{
+            title: "Why resumes still matter in the AI era",
+            excerpt: "Understand how recruiters screen and why clarity beats buzzwords.",
+          },{
+            title: "ATS‑friendly formatting: do’s and don’ts",
+            excerpt: "Practical tips for templates, fonts, and section ordering.",
+          },{
+            title: "From bullet to impact: writing experience like a pro",
+            excerpt: "Turn tasks into quantified achievements with simple formulas.",
+          }].map((b,i)=> (
+            <Card key={i}>
+              <CardHeader>
+                <CardTitle className="text-lg">{b.title}</CardTitle>
+                <CardDescription>{b.excerpt}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="link" asChild className="px-0"> <Link to="/resources">Read more →</Link> </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Community */}
+      <section className="border-t">
+        <div className="container py-16">
+          <div className="mx-auto max-w-3xl text-center space-y-4">
+            <h2 className="text-2xl font-bold tracking-tight">Community & Accountability</h2>
+            <p className="text-muted-foreground">
+              Join focus groups formed via LinkedIn and GitHub to code together, share daily progress, and support each other’s journey. Post your
+              commits, PRs, and learnings—build consistent habits with peers.
+            </p>
+            <div className="flex justify-center gap-3">
+              <Button asChild><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">Join on LinkedIn</a></Button>
+              <Button asChild variant="outline"><a href="https://github.com/" target="_blank" rel="noreferrer">Join on GitHub</a></Button>
+            </div>
           </div>
         </div>
       </section>

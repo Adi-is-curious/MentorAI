@@ -80,7 +80,7 @@ export default function Index() {
             <p className="text-muted-foreground">Swipe through quick guides on hot roles and resume success.</p>
           </div>
           <div className="relative mx-auto max-w-5xl">
-            <Carousel className="px-12">
+            <Carousel className="px-12" autoPlay autoPlayInterval={5000} autoPlayDelay={2500}>
               <CarouselContent>
                 <CarouselItem>
                   <Card>

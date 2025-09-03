@@ -16,6 +16,7 @@ import Suggestions from "./pages/Suggestions";
 import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
+import Quiz from "./pages/Quiz";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/quiz" element={<Index />} />
+            <Route path="/quiz" element={<Quiz />} />
             <Route path="/suggestions" element={<Suggestions />} />
             <Route path="/resume-analyzer" element={<Analyzer />} />
             <Route path="/resources" element={<Resources />} />

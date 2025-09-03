@@ -17,6 +17,10 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  autoPlay?: boolean;
+  autoPlayInterval?: number;
+  autoPlayDelay?: number;
+  pauseOnHover?: boolean;
 };
 
 type CarouselContextProps = {
@@ -52,12 +56,17 @@ const Carousel = React.forwardRef<
       plugins,
       className,
       children,
+      autoPlay = false,
+      autoPlayInterval = 5000,
+      autoPlayDelay = 2000,
+      pauseOnHover = true,
       ...props
     },
     ref,
   ) => {
     const [carouselRef, api] = useEmblaCarousel(
       {
+        loop: true,
         ...opts,
         axis: orientation === "horizontal" ? "x" : "y",
       },
@@ -65,6 +74,9 @@ const Carousel = React.forwardRef<
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
+    const isPausedRef = React.useRef(false);
+    const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+    const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
@@ -118,6 +130,68 @@ const Carousel = React.forwardRef<
       };
     }, [api, onSelect]);
 
+    // Autoplay logic
+    React.useEffect(() => {
+      if (!api || !autoPlay) return;
+
+      const clearTimers = () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+      };
+
+      const start = () => {
+        clearTimers();
+        if (isPausedRef.current) return;
+        intervalRef.current = setInterval(() => {
+          api.scrollNext();
+        }, Math.max(1500, autoPlayInterval));
+      };
+
+      const startWithDelay = () => {
+        clearTimers();
+        if (isPausedRef.current) return;
+        timeoutRef.current = setTimeout(start, Math.max(0, autoPlayDelay));
+      };
+
+      const onPointerDown = () => {
+        isPausedRef.current = true;
+        clearTimers();
+      };
+      const onPointerUp = () => {
+        isPausedRef.current = false;
+        startWithDelay();
+      };
+
+      const onVisibility = () => {
+        if (document.hidden) {
+          isPausedRef.current = true;
+          clearTimers();
+        } else {
+          isPausedRef.current = false;
+          startWithDelay();
+        }
+      };
+
+      api.on("pointerDown", onPointerDown);
+      api.on("pointerUp", onPointerUp);
+      document.addEventListener("visibilitychange", onVisibility);
+
+      startWithDelay();
+
+      return () => {
+        clearTimers();
+        api.off("pointerDown", onPointerDown);
+        api.off("pointerUp", onPointerUp);
+        document.removeEventListener("visibilitychange", onVisibility);
+      };
+    }, [api, autoPlay, autoPlayInterval, autoPlayDelay]);
+
     return (
       <CarouselContext.Provider
         value={{
@@ -135,6 +209,24 @@ const Carousel = React.forwardRef<
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
+          onMouseEnter={pauseOnHover ? () => {
+            isPausedRef.current = true;
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+          } : undefined}
+          onMouseLeave={pauseOnHover ? () => {
+            isPausedRef.current = false;
+            // restart after leaving
+            if (autoPlay && api) {
+              if (timeoutRef.current) clearTimeout(timeoutRef.current);
+              timeoutRef.current = setTimeout(() => {
+                if (!isPausedRef.current) {
+                  if (intervalRef.current) clearInterval(intervalRef.current);
+                  intervalRef.current = setInterval(() => api.scrollNext(), Math.max(1500, autoPlayInterval));
+                }
+              }, Math.max(0, autoPlayDelay));
+            }
+          } : undefined}
           className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"

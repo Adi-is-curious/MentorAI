@@ -130,7 +130,7 @@ export default function Index() {
                 <CardDescription>{b.excerpt}</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="link" asChild className="px-0"> <Link to="/resources">Read more →</Link> </Button>
+                <Button variant="link" asChild className="px-0"><Link to="/resources">Read more →</Link></Button>
               </CardContent>
             </Card>
           ))}

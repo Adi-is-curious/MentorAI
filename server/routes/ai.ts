@@ -24,7 +24,7 @@ export const handleAnalyze: RequestHandler = (req, res) => {
   ];
 
   const matched = domains.filter((d) => d.match.test(text));
-  const suggestions = (matched.length ? matched : domains.slice(0, 2))).map(({ domain, reason }) => ({ domain, reason }));
+  const suggestions = (matched.length ? matched : domains.slice(0, 2)).map(({ domain, reason }) => ({ domain, reason }));
 
   const canonicalSkills = [
     "python","sql","statistics","react","typescript","node","api design","cloud","docker","ml fundamentals","data visualization","testing",

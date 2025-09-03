@@ -184,9 +184,36 @@ export default function Index() {
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { title: "Why resumes still matter in the AI era", excerpt: "How recruiters screen and why clarity beats buzzwords." },
-            { title: "ATS‑friendly formatting: do’s and don’ts", excerpt: "Templates, fonts, section ordering that work." },
-            { title: "From bullet to impact: writing experience like a pro", excerpt: "Turn tasks into quantified achievements." },
+            {
+              title: "How to get a job with no experience",
+              excerpt: "Practical steps to break in using projects, networking, and tailored applications.",
+              href: "https://www.indeed.com/career-advice/finding-a-job/how-to-get-a-job-with-no-experience",
+            },
+            {
+              title: "The STAR method for interviews",
+              excerpt: "Structure your answers to behavioral questions for maximum impact.",
+              href: "https://www.glassdoor.com/blog/guide/star-method/",
+            },
+            {
+              title: "Resume writing: 10 proven tips",
+              excerpt: "Clarity, impact, keywords, and design choices that pass ATS and humans.",
+              href: "https://www.linkedin.com/pulse/resume-writing-tips/",
+            },
+            {
+              title: "System design interview primer",
+              excerpt: "Core concepts, trade-offs, and how to practice effectively.",
+              href: "https://www.educative.io/blog/complete-guide-to-system-design",
+            },
+            {
+              title: "SQL interview questions",
+              excerpt: "Common patterns and exercises seen in data and backend interviews.",
+              href: "https://www.interviewbit.com/sql-interview-questions/",
+            },
+            {
+              title: "Cybersecurity career roadmap",
+              excerpt: "Skills, certifications, and roles from SOC to Cloud Security.",
+              href: "https://www.cyberseek.org/pathway.html",
+            },
           ].map((b, i) => (
             <Card key={i}>
               <CardHeader>
@@ -194,7 +221,9 @@ export default function Index() {
                 <CardDescription>{b.excerpt}</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="link" asChild className="px-0"><Link to="/resources">Read more →</Link></Button>
+                <Button variant="link" asChild className="px-0">
+                  <a href={b.href} target="_blank" rel="noreferrer">Read on site →</a>
+                </Button>
               </CardContent>
             </Card>
           ))}

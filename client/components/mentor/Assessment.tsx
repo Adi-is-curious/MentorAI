@@ -342,6 +342,13 @@ export default function Assessment() {
                       "Rust",
                       "Kotlin",
                       "Swift",
+                      "PHP",
+                      "Ruby",
+                      "Scala",
+                      "SQL",
+                      "Bash",
+                      "R",
+                      "MATLAB",
                     ].map((lang) => (
                       <label
                         key={lang}
@@ -360,6 +367,25 @@ export default function Assessment() {
                         <span>{lang}</span>
                       </label>
                     ))}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Checkbox
+                      checked={form.codingLanguages.some((x) => x.startsWith("Other:"))}
+                      onCheckedChange={(c) => {
+                        const base = form.codingLanguages.filter((x) => !x.startsWith("Other:"));
+                        const val = (document.getElementById("other-lang") as HTMLInputElement | null)?.value?.trim();
+                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        update("codingLanguages", next as any);
+                      }}
+                      aria-label="Other language"
+                    />
+                    <Input id="other-lang" placeholder="Other (type here)" onBlur={(e) => {
+                      const base = form.codingLanguages.filter((x) => !x.startsWith("Other:"));
+                      const val = e.target.value.trim();
+                      const has = form.codingLanguages.some((x) => x.startsWith("Other:"));
+                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
+                      update("codingLanguages", next as any);
+                    }} />
                   </div>
                 </div>
 

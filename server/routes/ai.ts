@@ -51,6 +51,16 @@ export const handleAnalyze: RequestHandler = (req, res) => {
       match: /(ml|machine learning|ai|pytorch|tensorflow|llm|prompt)/,
     },
     {
+      domain: "Cybersecurity",
+      reason: "aptitude for securing systems and incident response",
+      match: /(security|siem|soc|blue team|threat|vulnerability|owasp|splunk)/,
+    },
+    {
+      domain: "Cloud/DevOps",
+      reason: "experience with cloud platforms and automation",
+      match: /(aws|gcp|azure|docker|kubernetes|devops|terraform|ci\/cd)/,
+    },
+    {
       domain: "Product Management",
       reason: "blend of technical and communication skills",
       match: /(product|roadmap|stakeholder|communication|analytics)/,

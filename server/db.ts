@@ -6,7 +6,10 @@ function getPool() {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not set");
   if (!pool) {
-    pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: false } });
+    pool = new Pool({
+      connectionString: url,
+      ssl: { rejectUnauthorized: false },
+    });
   }
   return pool;
 }
@@ -31,6 +34,8 @@ export async function saveQuiz(data: any) {
 export async function getLatestQuiz() {
   await ensureSchema();
   const p = getPool();
-  const r = await p.query("SELECT data FROM quizzes ORDER BY created_at DESC LIMIT 1");
+  const r = await p.query(
+    "SELECT data FROM quizzes ORDER BY created_at DESC LIMIT 1",
+  );
   return r.rows[0]?.data ?? null;
 }

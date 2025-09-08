@@ -522,7 +522,7 @@ export default function Assessment() {
                 <div className="space-y-2">
                   <Label>Work values that matter</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {["Impact", "Salary", "Flexibility", "Stability", "Innovation", "Mentorship"].map((val) => (
+                    {["Impact", "Salary", "Flexibility", "Stability", "Innovation", "Mentorship", "Learning", "Autonomy", "Work-life", "Recognition", "Ownership", "Team culture"].map((val) => (
                       <label key={val} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
                         <Checkbox
                           checked={form.values.includes(val)}
@@ -535,6 +535,25 @@ export default function Assessment() {
                         <span>{val}</span>
                       </label>
                     ))}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Checkbox
+                      checked={form.values.some((x) => x.startsWith("Other:"))}
+                      onCheckedChange={(c) => {
+                        const base = form.values.filter((x) => !x.startsWith("Other:"));
+                        const val = (document.getElementById("other-value") as HTMLInputElement | null)?.value?.trim();
+                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        update("values", next as any);
+                      }}
+                      aria-label="Other value"
+                    />
+                    <Input id="other-value" placeholder="Other (type here)" onBlur={(e) => {
+                      const base = form.values.filter((x) => !x.startsWith("Other:"));
+                      const val = e.target.value.trim();
+                      const has = form.values.some((x) => x.startsWith("Other:"));
+                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
+                      update("values", next as any);
+                    }} />
                   </div>
                 </div>
 

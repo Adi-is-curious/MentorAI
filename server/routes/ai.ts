@@ -62,7 +62,12 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     {
       domain: "AI/ML Engineering",
       reason: "interest in machine learning and model building",
-      match: /(ml|machine learning|ai|pytorch|tensorflow|llm|prompt)/,
+      match: /(ml|machine learning|ai|pytorch|tensorflow|llm)/,
+    },
+    {
+      domain: "Prompt Engineering",
+      reason: "strength in LLM tooling and prompt design",
+      match: /(prompt|rag|langchain|llamaindex|vector|retrieval)/,
     },
     {
       domain: "Cybersecurity",

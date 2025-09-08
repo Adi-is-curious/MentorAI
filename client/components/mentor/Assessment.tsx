@@ -1101,7 +1101,7 @@ export default function Assessment() {
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-2 sm:grid-cols-2">
-                <Button onClick={() => navigate("/suggestions")}>
+                <Button onClick={() => navigate("/suggestions", { state: form })}>
                   Get AI Suggestions
                 </Button>
                 <Button

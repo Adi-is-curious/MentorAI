@@ -1106,7 +1106,7 @@ export default function Assessment() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => navigate("/resume-analyzer")}
+                  onClick={() => navigate("/resume-analyzer", { state: form })}
                 >
                   Analyze Responses
                 </Button>

@@ -10,7 +10,6 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import type { AnalyzeResponse } from "@shared/api";
 import { Link } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,

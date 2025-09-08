@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { AnalyzeRequest, AnalyzeResponse } from "@shared/api";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -92,8 +93,14 @@ export default function Suggestions() {
               <CardTitle>Generating suggestions…</CardTitle>
               <CardDescription>Please wait a moment.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-2 w-full animate-pulse rounded bg-accent" />
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/40 border-t-primary" />
+                <span className="text-sm text-muted-foreground">Analyzing your inputs…</span>
+              </div>
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-11/12" />
+              <Skeleton className="h-3 w-9/12" />
             </CardContent>
           </Card>
         ) : error ? (

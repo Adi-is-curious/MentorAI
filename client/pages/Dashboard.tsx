@@ -44,7 +44,10 @@ export default function Dashboard() {
   const totalSkills = 12;
   const gaps = result?.skillGaps?.length ?? totalSkills;
   const progress = useMemo(() => {
-    const pct = Math.max(0, Math.min(100, 100 - Math.round((gaps / totalSkills) * 100)));
+    const pct = Math.max(
+      0,
+      Math.min(100, 100 - Math.round((gaps / totalSkills) * 100)),
+    );
     return pct;
   }, [gaps]);
 
@@ -69,7 +72,9 @@ export default function Dashboard() {
   const roadmapState = useMemo(() => {
     if (!topDomain) return null;
     try {
-      const raw = localStorage.getItem(`mentorai_roadmap_progress_${topDomain}`);
+      const raw = localStorage.getItem(
+        `mentorai_roadmap_progress_${topDomain}`,
+      );
       if (!raw) return null;
       const obj = JSON.parse(raw) as Record<string, boolean>;
       const total = Object.keys(obj).length;
@@ -100,9 +105,14 @@ export default function Dashboard() {
         return;
       }
       const last = new Date(obj.last);
-      const diff = Math.round((today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+      const diff = Math.round(
+        (today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24),
+      );
       const nextCount = diff === 1 ? obj.count + 1 : 1;
-      localStorage.setItem(key, JSON.stringify({ last: dstr, count: nextCount }));
+      localStorage.setItem(
+        key,
+        JSON.stringify({ last: dstr, count: nextCount }),
+      );
       setStreak(nextCount);
     } catch {}
   }, []);
@@ -120,12 +130,18 @@ export default function Dashboard() {
           <CardContent className="space-y-3">
             <div className="grid gap-2 sm:grid-cols-2">
               <div>
-                <div className="text-sm text-muted-foreground">Preferred Track</div>
-                <div className="text-lg font-medium">{inputs?.rolePref ?? "—"}</div>
+                <div className="text-sm text-muted-foreground">
+                  Preferred Track
+                </div>
+                <div className="text-lg font-medium">
+                  {inputs?.rolePref ?? "—"}
+                </div>
               </div>
               <div>
                 <div className="text-sm text-muted-foreground">Experience</div>
-                <div className="text-lg font-medium">{inputs?.experience ?? "—"}</div>
+                <div className="text-lg font-medium">
+                  {inputs?.experience ?? "—"}
+                </div>
               </div>
             </div>
             <div>
@@ -143,11 +159,22 @@ export default function Dashboard() {
                 <CardContent className="h-40">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={barData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--muted))"
+                      />
                       <XAxis dataKey="name" tickLine={false} axisLine={false} />
-                      <YAxis allowDecimals={false} tickLine={false} axisLine={false} />
+                      <YAxis
+                        allowDecimals={false}
+                        tickLine={false}
+                        axisLine={false}
+                      />
                       <RTooltip cursor={{ fill: "hsl(var(--accent))" }} />
-                      <Bar dataKey="value" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                      <Bar
+                        dataKey="value"
+                        fill="hsl(var(--primary))"
+                        radius={[6, 6, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -155,16 +182,31 @@ export default function Dashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">Weekly Study Plan</CardTitle>
-                  <CardDescription>{weeklyHours} hrs/week · 6 weeks</CardDescription>
+                  <CardDescription>
+                    {weeklyHours} hrs/week · 6 weeks
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="h-40">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={studyPlan}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--muted))"
+                      />
                       <XAxis dataKey="week" tickLine={false} axisLine={false} />
-                      <YAxis allowDecimals={false} tickLine={false} axisLine={false} />
+                      <YAxis
+                        allowDecimals={false}
+                        tickLine={false}
+                        axisLine={false}
+                      />
                       <RTooltip cursor={{ stroke: "hsl(var(--accent))" }} />
-                      <Line type="monotone" dataKey="hours" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="hours"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                        dot={{ r: 3 }}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -192,9 +234,13 @@ export default function Dashboard() {
           <CardContent>
             <ul className="space-y-2 text-sm">
               {result?.suggestions?.slice(0, 3).map((s) => (
-                <li key={s.domain}>{s.domain} — {s.reason}</li>
+                <li key={s.domain}>
+                  {s.domain} — {s.reason}
+                </li>
               )) ?? (
-                <li className="text-muted-foreground">Run Analyzer to see suggestions.</li>
+                <li className="text-muted-foreground">
+                  Run Analyzer to see suggestions.
+                </li>
               )}
             </ul>
           </CardContent>
@@ -205,20 +251,30 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Roadmap Progress</CardTitle>
-            <CardDescription>{topDomain ? `Domain: ${topDomain}` : "Complete the quiz to personalize"}</CardDescription>
+            <CardDescription>
+              {topDomain
+                ? `Domain: ${topDomain}`
+                : "Complete the quiz to personalize"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {roadmapState ? (
               <div className="space-y-2">
                 <div className="text-sm">XP: {roadmapState.xp}</div>
-                <div className="text-sm">Quests: {roadmapState.done}/{roadmapState.total}</div>
+                <div className="text-sm">
+                  Quests: {roadmapState.done}/{roadmapState.total}
+                </div>
                 <Progress value={roadmapState.pct} />
                 <div className="pt-2">
-                  <Button asChild size="sm"><Link to="/resources">Open roadmap</Link></Button>
+                  <Button asChild size="sm">
+                    <Link to="/resources">Open roadmap</Link>
+                  </Button>
                 </div>
               </div>
             ) : (
-              <div className="text-sm text-muted-foreground">No progress yet. Start with the roadmap.</div>
+              <div className="text-sm text-muted-foreground">
+                No progress yet. Start with the roadmap.
+              </div>
             )}
           </CardContent>
         </Card>
@@ -233,11 +289,15 @@ export default function Dashboard() {
               {(result?.skillGaps ?? []).slice(0, 5).map((g) => (
                 <li key={g} className="flex items-center justify-between">
                   <span>{g}</span>
-                  <Button asChild size="sm" variant="outline"><Link to="/resources">Plan</Link></Button>
+                  <Button asChild size="sm" variant="outline">
+                    <Link to="/resources">Plan</Link>
+                  </Button>
                 </li>
               ))}
               {!result?.skillGaps?.length && (
-                <li className="text-muted-foreground">Run Analyzer to see gaps.</li>
+                <li className="text-muted-foreground">
+                  Run Analyzer to see gaps.
+                </li>
               )}
             </ul>
           </CardContent>
@@ -248,18 +308,28 @@ export default function Dashboard() {
             <CardTitle className="text-base">Achievements</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
-            {((result?.suggestions?.length ?? 0) >= 3) && (
-              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs">Explorer</span>
+            {(result?.suggestions?.length ?? 0) >= 3 && (
+              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs">
+                Explorer
+              </span>
             )}
-            {(progress >= 50) && (
-              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs">Halfway There</span>
+            {progress >= 50 && (
+              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs">
+                Halfway There
+              </span>
             )}
-            {(weeklyHours >= 10) && (
-              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs">Committed</span>
+            {weeklyHours >= 10 && (
+              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs">
+                Committed
+              </span>
             )}
-            {(!((result?.suggestions?.length ?? 0) >= 3) && progress < 50 && weeklyHours < 10) && (
-              <span className="text-sm text-muted-foreground">Complete tasks to unlock badges.</span>
-            )}
+            {!((result?.suggestions?.length ?? 0) >= 3) &&
+              progress < 50 &&
+              weeklyHours < 10 && (
+                <span className="text-sm text-muted-foreground">
+                  Complete tasks to unlock badges.
+                </span>
+              )}
           </CardContent>
         </Card>
 
@@ -270,7 +340,9 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{streak}d</div>
-            <p className="text-sm text-muted-foreground">Come back tomorrow to keep it going.</p>
+            <p className="text-sm text-muted-foreground">
+              Come back tomorrow to keep it going.
+            </p>
           </CardContent>
         </Card>
       </div>

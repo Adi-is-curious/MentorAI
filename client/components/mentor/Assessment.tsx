@@ -67,7 +67,9 @@ const schema = z
     interestsTags: z.array(z.string()).default([]),
     values: z.array(z.string()).default([]),
     learningStyle: z.enum(["project", "concept", "collab"]).default("project"),
-    environment: z.enum(["startup", "bigtech", "remote", "academia"]).default("remote"),
+    environment: z
+      .enum(["startup", "bigtech", "remote", "academia"])
+      .default("remote"),
   })
   .refine(
     (val) =>
@@ -267,7 +269,10 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="rolePref">Preferred Track</Label>
-                    <Select value={form.rolePref} onValueChange={(v) => update("rolePref", v as any)}>
+                    <Select
+                      value={form.rolePref}
+                      onValueChange={(v) => update("rolePref", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a track" />
                       </SelectTrigger>
@@ -279,11 +284,16 @@ export default function Assessment() {
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Helper id="help-role">Choose what you enjoy most today.</Helper>
+                    <Helper id="help-role">
+                      Choose what you enjoy most today.
+                    </Helper>
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="experience">Experience Level</Label>
-                    <Select value={form.experience} onValueChange={(v) => update("experience", v as any)}>
+                    <Select
+                      value={form.experience}
+                      onValueChange={(v) => update("experience", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select level" />
                       </SelectTrigger>
@@ -294,7 +304,9 @@ export default function Assessment() {
                         <SelectItem value="senior">Senior</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Helper id="help-exp">This helps tailor the learning plan.</Helper>
+                    <Helper id="help-exp">
+                      This helps tailor the learning plan.
+                    </Helper>
                   </div>
                 </div>
 
@@ -380,22 +392,44 @@ export default function Assessment() {
                   </div>
                   <div className="mt-2 flex items-center gap-2">
                     <Checkbox
-                      checked={form.codingLanguages.some((x) => x.startsWith("Other:"))}
+                      checked={form.codingLanguages.some((x) =>
+                        x.startsWith("Other:"),
+                      )}
                       onCheckedChange={(c) => {
-                        const base = form.codingLanguages.filter((x) => !x.startsWith("Other:"));
-                        const val = (document.getElementById("other-lang") as HTMLInputElement | null)?.value?.trim();
-                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        const base = form.codingLanguages.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = (
+                          document.getElementById(
+                            "other-lang",
+                          ) as HTMLInputElement | null
+                        )?.value?.trim();
+                        const next =
+                          c && val ? [...base, `Other: ${val}`] : base;
                         update("codingLanguages", next as any);
                       }}
                       aria-label="Other language"
                     />
-                    <Input id="other-lang" placeholder="Other (type here)" onBlur={(e) => {
-                      const base = form.codingLanguages.filter((x) => !x.startsWith("Other:"));
-                      const val = e.target.value.trim();
-                      const has = form.codingLanguages.some((x) => x.startsWith("Other:"));
-                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
-                      update("codingLanguages", next as any);
-                    }} />
+                    <Input
+                      id="other-lang"
+                      placeholder="Other (type here)"
+                      onBlur={(e) => {
+                        const base = form.codingLanguages.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = e.target.value.trim();
+                        const has = form.codingLanguages.some((x) =>
+                          x.startsWith("Other:"),
+                        );
+                        const next =
+                          has && val
+                            ? [...base, `Other: ${val}`]
+                            : has
+                              ? base
+                              : base;
+                        update("codingLanguages", next as any);
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -454,20 +488,40 @@ export default function Assessment() {
                     <Checkbox
                       checked={form.tools.some((x) => x.startsWith("Other:"))}
                       onCheckedChange={(c) => {
-                        const base = form.tools.filter((x) => !x.startsWith("Other:"));
-                        const val = (document.getElementById("other-tool") as HTMLInputElement | null)?.value?.trim();
-                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        const base = form.tools.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = (
+                          document.getElementById(
+                            "other-tool",
+                          ) as HTMLInputElement | null
+                        )?.value?.trim();
+                        const next =
+                          c && val ? [...base, `Other: ${val}`] : base;
                         update("tools", next as any);
                       }}
                       aria-label="Other tool"
                     />
-                    <Input id="other-tool" placeholder="Other (type here)" onBlur={(e) => {
-                      const base = form.tools.filter((x) => !x.startsWith("Other:"));
-                      const val = e.target.value.trim();
-                      const has = form.tools.some((x) => x.startsWith("Other:"));
-                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
-                      update("tools", next as any);
-                    }} />
+                    <Input
+                      id="other-tool"
+                      placeholder="Other (type here)"
+                      onBlur={(e) => {
+                        const base = form.tools.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = e.target.value.trim();
+                        const has = form.tools.some((x) =>
+                          x.startsWith("Other:"),
+                        );
+                        const next =
+                          has && val
+                            ? [...base, `Other: ${val}`]
+                            : has
+                              ? base
+                              : base;
+                        update("tools", next as any);
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -492,7 +546,10 @@ export default function Assessment() {
                       "AR/VR",
                       "Robotics",
                     ].map((tag) => (
-                      <label key={tag} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                      <label
+                        key={tag}
+                        className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"
+                      >
                         <Checkbox
                           checked={form.interestsTags.includes(tag)}
                           onCheckedChange={(c) => {
@@ -509,22 +566,44 @@ export default function Assessment() {
                   </div>
                   <div className="mt-2 flex items-center gap-2">
                     <Checkbox
-                      checked={form.interestsTags.some((x) => x.startsWith("Other:"))}
+                      checked={form.interestsTags.some((x) =>
+                        x.startsWith("Other:"),
+                      )}
                       onCheckedChange={(c) => {
-                        const base = form.interestsTags.filter((x) => !x.startsWith("Other:"));
-                        const val = (document.getElementById("other-enjoy") as HTMLInputElement | null)?.value?.trim();
-                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        const base = form.interestsTags.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = (
+                          document.getElementById(
+                            "other-enjoy",
+                          ) as HTMLInputElement | null
+                        )?.value?.trim();
+                        const next =
+                          c && val ? [...base, `Other: ${val}`] : base;
                         update("interestsTags", next as any);
                       }}
                       aria-label="Other interest"
                     />
-                    <Input id="other-enjoy" placeholder="Other (type here)" onBlur={(e) => {
-                      const base = form.interestsTags.filter((x) => !x.startsWith("Other:"));
-                      const val = e.target.value.trim();
-                      const has = form.interestsTags.some((x) => x.startsWith("Other:"));
-                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
-                      update("interestsTags", next as any);
-                    }} />
+                    <Input
+                      id="other-enjoy"
+                      placeholder="Other (type here)"
+                      onBlur={(e) => {
+                        const base = form.interestsTags.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = e.target.value.trim();
+                        const has = form.interestsTags.some((x) =>
+                          x.startsWith("Other:"),
+                        );
+                        const next =
+                          has && val
+                            ? [...base, `Other: ${val}`]
+                            : has
+                              ? base
+                              : base;
+                        update("interestsTags", next as any);
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -532,12 +611,30 @@ export default function Assessment() {
                 <div className="space-y-2">
                   <Label>Work values that matter</Label>
                   <div className="grid grid-cols-2 gap-2">
-                    {["Impact", "Salary", "Flexibility", "Stability", "Innovation", "Mentorship", "Learning", "Autonomy", "Work-life", "Recognition", "Ownership", "Team culture"].map((val) => (
-                      <label key={val} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                    {[
+                      "Impact",
+                      "Salary",
+                      "Flexibility",
+                      "Stability",
+                      "Innovation",
+                      "Mentorship",
+                      "Learning",
+                      "Autonomy",
+                      "Work-life",
+                      "Recognition",
+                      "Ownership",
+                      "Team culture",
+                    ].map((val) => (
+                      <label
+                        key={val}
+                        className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"
+                      >
                         <Checkbox
                           checked={form.values.includes(val)}
                           onCheckedChange={(c) => {
-                            const next = c ? [...form.values, val] : form.values.filter((x) => x !== val);
+                            const next = c
+                              ? [...form.values, val]
+                              : form.values.filter((x) => x !== val);
                             update("values", next as any);
                           }}
                           aria-label={val}
@@ -550,20 +647,40 @@ export default function Assessment() {
                     <Checkbox
                       checked={form.values.some((x) => x.startsWith("Other:"))}
                       onCheckedChange={(c) => {
-                        const base = form.values.filter((x) => !x.startsWith("Other:"));
-                        const val = (document.getElementById("other-value") as HTMLInputElement | null)?.value?.trim();
-                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        const base = form.values.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = (
+                          document.getElementById(
+                            "other-value",
+                          ) as HTMLInputElement | null
+                        )?.value?.trim();
+                        const next =
+                          c && val ? [...base, `Other: ${val}`] : base;
                         update("values", next as any);
                       }}
                       aria-label="Other value"
                     />
-                    <Input id="other-value" placeholder="Other (type here)" onBlur={(e) => {
-                      const base = form.values.filter((x) => !x.startsWith("Other:"));
-                      const val = e.target.value.trim();
-                      const has = form.values.some((x) => x.startsWith("Other:"));
-                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
-                      update("values", next as any);
-                    }} />
+                    <Input
+                      id="other-value"
+                      placeholder="Other (type here)"
+                      onBlur={(e) => {
+                        const base = form.values.filter(
+                          (x) => !x.startsWith("Other:"),
+                        );
+                        const val = e.target.value.trim();
+                        const has = form.values.some((x) =>
+                          x.startsWith("Other:"),
+                        );
+                        const next =
+                          has && val
+                            ? [...base, `Other: ${val}`]
+                            : has
+                              ? base
+                              : base;
+                        update("values", next as any);
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -571,7 +688,10 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Learning style</Label>
-                    <Select value={form.learningStyle} onValueChange={(v) => update("learningStyle", v as any)}>
+                    <Select
+                      value={form.learningStyle}
+                      onValueChange={(v) => update("learningStyle", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
@@ -584,7 +704,10 @@ export default function Assessment() {
                   </div>
                   <div className="space-y-2">
                     <Label>Preferred environment</Label>
-                    <Select value={form.environment} onValueChange={(v) => update("environment", v as any)}>
+                    <Select
+                      value={form.environment}
+                      onValueChange={(v) => update("environment", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
@@ -592,7 +715,9 @@ export default function Assessment() {
                         <SelectItem value="startup">Startup</SelectItem>
                         <SelectItem value="bigtech">Big Tech</SelectItem>
                         <SelectItem value="remote">Remote-first</SelectItem>
-                        <SelectItem value="academia">Open-source/Academia</SelectItem>
+                        <SelectItem value="academia">
+                          Open-source/Academia
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -662,7 +787,10 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-1.5">
                     <Label>Preferred work style</Label>
-                    <Select value={form.workStyle} onValueChange={(v) => update("workStyle", v as any)}>
+                    <Select
+                      value={form.workStyle}
+                      onValueChange={(v) => update("workStyle", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
@@ -675,7 +803,10 @@ export default function Assessment() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>Willing to relocate?</Label>
-                    <Select value={form.relocate} onValueChange={(v) => update("relocate", v as any)}>
+                    <Select
+                      value={form.relocate}
+                      onValueChange={(v) => update("relocate", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
@@ -705,23 +836,44 @@ export default function Assessment() {
                     <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button type="button" aria-label="Help for skills" className="text-muted-foreground">
+                          <button
+                            type="button"
+                            aria-label="Help for skills"
+                            className="text-muted-foreground"
+                          >
                             <HelpCircle className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>Comma-separated. Example: react, typescript, sql</TooltipContent>
+                        <TooltipContent>
+                          Comma-separated. Example: react, typescript, sql
+                        </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <Input id="skills" aria-describedby="help-skills" placeholder="react, typescript, sql" value={form.skills} onChange={(e) => update("skills", e.target.value)} />
+                  <Input
+                    id="skills"
+                    aria-describedby="help-skills"
+                    placeholder="react, typescript, sql"
+                    value={form.skills}
+                    onChange={(e) => update("skills", e.target.value)}
+                  />
                   <div className="flex flex-wrap gap-2">
                     {POPULAR_SKILLS.map((s) => (
-                      <Button key={s} type="button" size="sm" variant="outline" className="rounded-full" onClick={() => addToken("skills", s)}>
+                      <Button
+                        key={s}
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={() => addToken("skills", s)}
+                      >
                         + {s}
                       </Button>
                     ))}
                   </div>
-                  <Helper id="help-skills">Add quickly using suggestions or type your own.</Helper>
+                  <Helper id="help-skills">
+                    Add quickly using suggestions or type your own.
+                  </Helper>
                 </div>
 
                 <div className="space-y-1.5">
@@ -730,23 +882,44 @@ export default function Assessment() {
                     <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button type="button" aria-label="Help for interests" className="text-muted-foreground">
+                          <button
+                            type="button"
+                            aria-label="Help for interests"
+                            className="text-muted-foreground"
+                          >
                             <HelpCircle className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>Comma-separated. Example: ai/ml, product, fintech</TooltipContent>
+                        <TooltipContent>
+                          Comma-separated. Example: ai/ml, product, fintech
+                        </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <Input id="interests" aria-describedby="help-interests" placeholder="ai/ml, product, fintech" value={form.interests} onChange={(e) => update("interests", e.target.value)} />
+                  <Input
+                    id="interests"
+                    aria-describedby="help-interests"
+                    placeholder="ai/ml, product, fintech"
+                    value={form.interests}
+                    onChange={(e) => update("interests", e.target.value)}
+                  />
                   <div className="flex flex-wrap gap-2">
                     {POPULAR_INTERESTS.map((s) => (
-                      <Button key={s} type="button" size="sm" variant="outline" className="rounded-full" onClick={() => addToken("interests", s)}>
+                      <Button
+                        key={s}
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={() => addToken("interests", s)}
+                      >
                         + {s}
                       </Button>
                     ))}
                   </div>
-                  <Helper id="help-interests">Pick from suggestions or type your own.</Helper>
+                  <Helper id="help-interests">
+                    Pick from suggestions or type your own.
+                  </Helper>
                 </div>
 
                 <div className="space-y-1.5">
@@ -789,12 +962,22 @@ export default function Assessment() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="portfolio">Portfolio / GitHub (optional)</Label>
-                    <Input id="portfolio" placeholder="https://github.com/username" value={form.portfolio} onChange={(e) => update("portfolio", e.target.value)} />
+                    <Label htmlFor="portfolio">
+                      Portfolio / GitHub (optional)
+                    </Label>
+                    <Input
+                      id="portfolio"
+                      placeholder="https://github.com/username"
+                      value={form.portfolio}
+                      onChange={(e) => update("portfolio", e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="degree">Highest degree</Label>
-                    <Select value={form.degree} onValueChange={(v) => update("degree", v as any)}>
+                    <Select
+                      value={form.degree}
+                      onValueChange={(v) => update("degree", v as any)}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
@@ -810,10 +993,29 @@ export default function Assessment() {
 
                 <div className="space-y-2">
                   <Label htmlFor="certs">Certifications (optional)</Label>
-                  <Input id="certs" placeholder="AWS CCP, Google Data Analytics" value={form.certifications} onChange={(e) => update("certifications", e.target.value)} />
+                  <Input
+                    id="certs"
+                    placeholder="AWS CCP, Google Data Analytics"
+                    value={form.certifications}
+                    onChange={(e) => update("certifications", e.target.value)}
+                  />
                   <div className="flex flex-wrap gap-2">
                     {CERTS.map((c) => (
-                      <Button key={c} type="button" size="sm" variant="outline" className="rounded-full" onClick={() => update("certifications", (form.certifications ? form.certifications + ", " : "") + c)}>
+                      <Button
+                        key={c}
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={() =>
+                          update(
+                            "certifications",
+                            (form.certifications
+                              ? form.certifications + ", "
+                              : "") + c,
+                          )
+                        }
+                      >
                         + {c}
                       </Button>
                     ))}

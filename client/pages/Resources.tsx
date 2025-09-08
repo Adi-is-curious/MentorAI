@@ -42,11 +42,17 @@ const domainResources: Record<string, { title: string; url: string }[]> = {
     { title: "Practical DL", url: "https://course.fast.ai/" },
   ],
   "Prompt Engineering": [
-    { title: "LangChain Docs", url: "https://python.langchain.com/docs/get_started/introduction/" },
-    { title: "Prompt Engineering Guide", url: "https://www.promptingguide.ai/" },
+    {
+      title: "LangChain Docs",
+      url: "https://python.langchain.com/docs/get_started/introduction/",
+    },
+    {
+      title: "Prompt Engineering Guide",
+      url: "https://www.promptingguide.ai/",
+    },
     { title: "LlamaIndex", url: "https://docs.llamaindex.ai/" },
   ],
-  "Cybersecurity": [
+  Cybersecurity: [
     { title: "TryHackMe", url: "https://tryhackme.com/" },
     { title: "Blue Team Labs Online", url: "https://blueteamlabs.online/" },
     { title: "OWASP Top 10", url: "https://owasp.org/www-project-top-ten/" },
@@ -54,7 +60,10 @@ const domainResources: Record<string, { title: string; url: string }[]> = {
   "Cloud/DevOps": [
     { title: "AWS Skill Builder", url: "https://skillbuilder.aws/" },
     { title: "Kubernetes Docs", url: "https://kubernetes.io/docs/home/" },
-    { title: "Terraform Docs", url: "https://developer.hashicorp.com/terraform/docs" },
+    {
+      title: "Terraform Docs",
+      url: "https://developer.hashicorp.com/terraform/docs",
+    },
   ],
   "Product Management": [
     { title: "SVPG Articles", url: "https://www.svpg.com/articles/" },

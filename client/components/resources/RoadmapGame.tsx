@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
@@ -22,7 +28,19 @@ function useRoadmapProgress(domain: string) {
   return [state, setState] as const;
 }
 
-function Quest({ id, title, url, checked, onToggle }: { id: string; title: string; url?: string; checked: boolean; onToggle: (v: boolean) => void }) {
+function Quest({
+  id,
+  title,
+  url,
+  checked,
+  onToggle,
+}: {
+  id: string;
+  title: string;
+  url?: string;
+  checked: boolean;
+  onToggle: (v: boolean) => void;
+}) {
   return (
     <label className="flex items-start gap-3 rounded-md border p-3 text-sm hover:bg-accent">
       <input
@@ -35,7 +53,12 @@ function Quest({ id, title, url, checked, onToggle }: { id: string; title: strin
       <div>
         <div className="font-medium">{title}</div>
         {url ? (
-          <a className="underline underline-offset-4 text-muted-foreground" href={url} target="_blank" rel="noreferrer">
+          <a
+            className="underline underline-offset-4 text-muted-foreground"
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+          >
             Open resource
           </a>
         ) : null}
@@ -44,7 +67,13 @@ function Quest({ id, title, url, checked, onToggle }: { id: string; title: strin
   );
 }
 
-export default function RoadmapGame({ domain, items }: { domain: string; items: Item[] }) {
+export default function RoadmapGame({
+  domain,
+  items,
+}: {
+  domain: string;
+  items: Item[];
+}) {
   const [progress, setProgress] = useRoadmapProgress(domain);
 
   const levels = useMemo(() => {
@@ -105,14 +134,22 @@ export default function RoadmapGame({ domain, items }: { domain: string; items: 
       },
     ];
     // Add remaining domain items as optional side quests
-    const extra = items.slice(2).map((it) => ({ title: `Side Quest: ${it.title}`, url: it.url }));
-    if (extra.length) base.push({ id: "SX", title: "Side Quests", quests: extra });
+    const extra = items
+      .slice(2)
+      .map((it) => ({ title: `Side Quest: ${it.title}`, url: it.url }));
+    if (extra.length)
+      base.push({ id: "SX", title: "Side Quests", quests: extra });
     return base;
   }, [domain, items]);
 
-  const allQuestIds = levels.flatMap((lvl) => lvl.quests.map((q, i) => `${lvl.id}-${i}`));
+  const allQuestIds = levels.flatMap((lvl) =>
+    lvl.quests.map((q, i) => `${lvl.id}-${i}`),
+  );
   const totalXP = allQuestIds.length * 10;
-  const earnedXP = allQuestIds.reduce((acc, id) => acc + (progress[id] ? 10 : 0), 0);
+  const earnedXP = allQuestIds.reduce(
+    (acc, id) => acc + (progress[id] ? 10 : 0),
+    0,
+  );
   const pct = totalXP ? Math.round((earnedXP / totalXP) * 100) : 0;
 
   return (
@@ -120,11 +157,15 @@ export default function RoadmapGame({ domain, items }: { domain: string; items: 
       <Card>
         <CardHeader>
           <CardTitle>Roadmap · {domain}</CardTitle>
-          <CardDescription>Complete quests to earn XP and level up</CardDescription>
+          <CardDescription>
+            Complete quests to earn XP and level up
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span>Total XP: {earnedXP}/{totalXP}</span>
+            <span>
+              Total XP: {earnedXP}/{totalXP}
+            </span>
             <span>{pct}%</span>
           </div>
           <Progress value={pct} />

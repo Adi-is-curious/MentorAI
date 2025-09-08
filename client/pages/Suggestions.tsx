@@ -49,8 +49,12 @@ export default function Suggestions() {
     <section className="container py-12">
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight">AI Suggestions</h1>
-          <p className="text-muted-foreground">Personalized roles matched from your inputs</p>
+          <h1 className="text-3xl font-extrabold tracking-tight">
+            AI Suggestions
+          </h1>
+          <p className="text-muted-foreground">
+            Personalized roles matched from your inputs
+          </p>
         </div>
 
         {loading ? (
@@ -87,7 +91,9 @@ export default function Suggestions() {
                   {data.suggestions.map((s) => (
                     <li key={s.domain} className="rounded-md border p-3">
                       <div className="font-semibold">{s.domain}</div>
-                      <div className="text-sm text-muted-foreground">{s.reason}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {s.reason}
+                      </div>
                     </li>
                   ))}
                 </ul>

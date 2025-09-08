@@ -17,10 +17,16 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     resumeText = "",
   } = body as AnalyzeRequest;
   const rolePref = String(body.rolePref ?? "");
-  const industries: string[] = Array.isArray(body.industries) ? body.industries : [];
-  const codingLanguages: string[] = Array.isArray(body.codingLanguages) ? body.codingLanguages : [];
+  const industries: string[] = Array.isArray(body.industries)
+    ? body.industries
+    : [];
+  const codingLanguages: string[] = Array.isArray(body.codingLanguages)
+    ? body.codingLanguages
+    : [];
   const tools: string[] = Array.isArray(body.tools) ? body.tools : [];
-  const interestsTags: string[] = Array.isArray(body.interestsTags) ? body.interestsTags : [];
+  const interestsTags: string[] = Array.isArray(body.interestsTags)
+    ? body.interestsTags
+    : [];
   const values: string[] = Array.isArray(body.values) ? body.values : [];
   const learningStyle = String(body.learningStyle ?? "");
   const environment = String(body.environment ?? "");

@@ -178,12 +178,9 @@ export default function Assessment() {
   }
 
   useEffect(() => {
-    const saved = localStorage.getItem("mentorai_last_inputs");
-    if (saved) {
-      try {
-        setForm((f) => ({ ...f, ...JSON.parse(saved) }));
-      } catch {}
-    }
+    try {
+      localStorage.removeItem("mentorai_last_inputs");
+    } catch {}
   }, []);
 
   function update<K extends keyof typeof form>(k: K, v: (typeof form)[K]) {

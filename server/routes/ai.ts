@@ -10,14 +10,24 @@ function parseCSV(input: string) {
 }
 
 export const handleAnalyze: RequestHandler = (req, res) => {
+  const body = (req.body || {}) as any;
   const {
     skills = "",
     interests = "",
     resumeText = "",
-  } = (req.body || {}) as AnalyzeRequest;
+  } = body as AnalyzeRequest;
+  const rolePref = String(body.rolePref ?? "");
+  const industries: string[] = Array.isArray(body.industries) ? body.industries : [];
+  const codingLanguages: string[] = Array.isArray(body.codingLanguages) ? body.codingLanguages : [];
+  const tools: string[] = Array.isArray(body.tools) ? body.tools : [];
+  const goals = String(body.goals ?? "");
+
   const skillList = parseCSV(skills.toLowerCase());
   const interestList = parseCSV(interests.toLowerCase());
-  const text = `${skills} ${interests} ${resumeText}`.toLowerCase();
+  const extra = [rolePref, ...industries, ...codingLanguages, ...tools, goals]
+    .filter(Boolean)
+    .join(", ");
+  const text = `${skills} ${interests} ${resumeText} ${extra}`.toLowerCase();
 
   const domains: { domain: string; reason: string; match: RegExp }[] = [
     {

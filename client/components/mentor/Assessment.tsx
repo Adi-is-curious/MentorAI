@@ -27,6 +27,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { Check, HelpCircle } from "lucide-react";
 
@@ -118,6 +125,45 @@ export default function Assessment() {
   const [choiceOpen, setChoiceOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
+
+  const POPULAR_SKILLS = [
+    "react",
+    "typescript",
+    "node",
+    "sql",
+    "python",
+    "docker",
+    "kubernetes",
+    "aws",
+    "ml fundamentals",
+  ];
+  const POPULAR_INTERESTS = [
+    "frontend",
+    "backend",
+    "ai/ml",
+    "security",
+    "cloud/devops",
+    "product",
+    "data science",
+  ];
+  const CERTS = [
+    "AWS CCP",
+    "AWS SAA",
+    "AZ-900",
+    "Security+",
+    "CySA+",
+    "Google Data Analytics",
+  ];
+
+  function addToken(field: "skills" | "interests", token: string) {
+    const current = String((form as any)[field] ?? "");
+    const parts = current
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!parts.includes(token)) parts.push(token);
+    update(field as any, parts.join(", "));
+  }
 
   useEffect(() => {
     const saved = localStorage.getItem("mentorai_last_inputs");
@@ -211,80 +257,34 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label htmlFor="rolePref">Preferred Track</Label>
-                    <div
-                      className="grid grid-cols-2 gap-2"
-                      role="radiogroup"
-                      aria-label="Preferred Track"
-                    >
-                      {[
-                        { v: "engineering", l: "Engineering" },
-                        { v: "data", l: "Data" },
-                        { v: "design", l: "Design" },
-                        { v: "product", l: "Product" },
-                      ].map((o) => (
-                        <button
-                          key={o.v}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.rolePref === o.v}
-                          onClick={() => update("rolePref", o.v as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.rolePref === o.v ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span>{o.l}</span>
-                            {form.rolePref === o.v ? (
-                              <Check className="h-4 w-4 text-primary" />
-                            ) : null}
-                          </div>
-                        </button>
-                      ))}
-                      <button
-                        type="button"
-                        role="radio"
-                        aria-checked={form.rolePref === "other"}
-                        onClick={() => update("rolePref", "other")}
-                        className={`col-span-2 rounded-md border px-3 py-2 text-sm ${form.rolePref === "other" ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                      >
-                        Other
-                      </button>
-                    </div>
-                    <Helper id="help-role">
-                      Choose what you enjoy most today.
-                    </Helper>
+                    <Select value={form.rolePref} onValueChange={(v) => update("rolePref", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a track" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="engineering">Engineering</SelectItem>
+                        <SelectItem value="data">Data</SelectItem>
+                        <SelectItem value="design">Design</SelectItem>
+                        <SelectItem value="product">Product</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Helper id="help-role">Choose what you enjoy most today.</Helper>
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="experience">Experience Level</Label>
-                    <div
-                      className="grid grid-cols-2 gap-2"
-                      role="radiogroup"
-                      aria-label="Experience Level"
-                    >
-                      {[
-                        { v: "student", l: "Student" },
-                        { v: "junior", l: "Junior" },
-                        { v: "mid", l: "Mid" },
-                        { v: "senior", l: "Senior" },
-                      ].map((o) => (
-                        <button
-                          key={o.v}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.experience === o.v}
-                          onClick={() => update("experience", o.v as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.experience === o.v ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span>{o.l}</span>
-                            {form.experience === o.v ? (
-                              <Check className="h-4 w-4 text-primary" />
-                            ) : null}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                    <Helper id="help-exp">
-                      This helps tailor the learning plan.
-                    </Helper>
+                    <Select value={form.experience} onValueChange={(v) => update("experience", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="student">Student</SelectItem>
+                        <SelectItem value="junior">Junior</SelectItem>
+                        <SelectItem value="mid">Mid</SelectItem>
+                        <SelectItem value="senior">Senior</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Helper id="help-exp">This helps tailor the learning plan.</Helper>
                   </div>
                 </div>
 
@@ -457,46 +457,30 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Learning style</Label>
-                    <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Learning style">
-                      {[
-                        { v: "project", l: "Project-based" },
-                        { v: "concept", l: "Concept-first" },
-                        { v: "collab", l: "Collaborative" },
-                      ].map((o) => (
-                        <button
-                          key={o.v}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.learningStyle === (o.v as any)}
-                          onClick={() => update("learningStyle", o.v as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.learningStyle === o.v ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          {o.l}
-                        </button>
-                      ))}
-                    </div>
+                    <Select value={form.learningStyle} onValueChange={(v) => update("learningStyle", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="project">Project-based</SelectItem>
+                        <SelectItem value="concept">Concept-first</SelectItem>
+                        <SelectItem value="collab">Collaborative</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
                     <Label>Preferred environment</Label>
-                    <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Preferred environment">
-                      {[
-                        { v: "startup", l: "Startup" },
-                        { v: "bigtech", l: "Big Tech" },
-                        { v: "remote", l: "Remote-first" },
-                        { v: "academia", l: "Open-source/Academia" },
-                      ].map((o) => (
-                        <button
-                          key={o.v}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.environment === (o.v as any)}
-                          onClick={() => update("environment", o.v as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.environment === o.v ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          {o.l}
-                        </button>
-                      ))}
-                    </div>
+                    <Select value={form.environment} onValueChange={(v) => update("environment", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="startup">Startup</SelectItem>
+                        <SelectItem value="bigtech">Big Tech</SelectItem>
+                        <SelectItem value="remote">Remote-first</SelectItem>
+                        <SelectItem value="academia">Open-source/Academia</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -564,45 +548,29 @@ export default function Assessment() {
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-1.5">
                     <Label>Preferred work style</Label>
-                    <div
-                      className="grid grid-cols-3 gap-2"
-                      role="radiogroup"
-                      aria-label="Work style"
-                    >
-                      {["remote", "onsite", "hybrid"].map((w) => (
-                        <button
-                          key={w}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.workStyle === w}
-                          onClick={() => update("workStyle", w as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.workStyle === w ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          {w}
-                        </button>
-                      ))}
-                    </div>
+                    <Select value={form.workStyle} onValueChange={(v) => update("workStyle", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="remote">Remote</SelectItem>
+                        <SelectItem value="onsite">Onsite</SelectItem>
+                        <SelectItem value="hybrid">Hybrid</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-1.5">
                     <Label>Willing to relocate?</Label>
-                    <div
-                      className="grid grid-cols-3 gap-2"
-                      role="radiogroup"
-                      aria-label="Relocate"
-                    >
-                      {["yes", "no", "maybe"].map((w) => (
-                        <button
-                          key={w}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.relocate === w}
-                          onClick={() => update("relocate", w as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.relocate === w ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          {w}
-                        </button>
-                      ))}
-                    </div>
+                    <Select value={form.relocate} onValueChange={(v) => update("relocate", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                        <SelectItem value="maybe">Maybe</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
                     <Label>Available hours per week</Label>
@@ -623,30 +591,23 @@ export default function Assessment() {
                     <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            aria-label="Help for skills"
-                            className="text-muted-foreground"
-                          >
+                          <button type="button" aria-label="Help for skills" className="text-muted-foreground">
                             <HelpCircle className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          Comma-separated. Example: react, typescript, sql
-                        </TooltipContent>
+                        <TooltipContent>Comma-separated. Example: react, typescript, sql</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <Input
-                    id="skills"
-                    aria-describedby="help-skills"
-                    placeholder="react, typescript, sql"
-                    value={form.skills}
-                    onChange={(e) => update("skills", e.target.value)}
-                  />
-                  <Helper id="help-skills">
-                    Your strongest technical and soft skills.
-                  </Helper>
+                  <Input id="skills" aria-describedby="help-skills" placeholder="react, typescript, sql" value={form.skills} onChange={(e) => update("skills", e.target.value)} />
+                  <div className="flex flex-wrap gap-2">
+                    {POPULAR_SKILLS.map((s) => (
+                      <Button key={s} type="button" size="sm" variant="outline" className="rounded-full" onClick={() => addToken("skills", s)}>
+                        + {s}
+                      </Button>
+                    ))}
+                  </div>
+                  <Helper id="help-skills">Add quickly using suggestions or type your own.</Helper>
                 </div>
 
                 <div className="space-y-1.5">
@@ -655,30 +616,23 @@ export default function Assessment() {
                     <TooltipProvider delayDuration={100}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            aria-label="Help for interests"
-                            className="text-muted-foreground"
-                          >
+                          <button type="button" aria-label="Help for interests" className="text-muted-foreground">
                             <HelpCircle className="h-4 w-4" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          Comma-separated. Example: ai/ml, product, fintech
-                        </TooltipContent>
+                        <TooltipContent>Comma-separated. Example: ai/ml, product, fintech</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <Input
-                    id="interests"
-                    aria-describedby="help-interests"
-                    placeholder="ai/ml, product, fintech"
-                    value={form.interests}
-                    onChange={(e) => update("interests", e.target.value)}
-                  />
-                  <Helper id="help-interests">
-                    Topics and domains you enjoy.
-                  </Helper>
+                  <Input id="interests" aria-describedby="help-interests" placeholder="ai/ml, product, fintech" value={form.interests} onChange={(e) => update("interests", e.target.value)} />
+                  <div className="flex flex-wrap gap-2">
+                    {POPULAR_INTERESTS.map((s) => (
+                      <Button key={s} type="button" size="sm" variant="outline" className="rounded-full" onClick={() => addToken("interests", s)}>
+                        + {s}
+                      </Button>
+                    ))}
+                  </div>
+                  <Helper id="help-interests">Pick from suggestions or type your own.</Helper>
                 </div>
 
                 <div className="space-y-1.5">
@@ -721,47 +675,35 @@ export default function Assessment() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="portfolio">
-                      Portfolio / GitHub (optional)
-                    </Label>
-                    <Input
-                      id="portfolio"
-                      placeholder="https://github.com/username"
-                      value={form.portfolio}
-                      onChange={(e) => update("portfolio", e.target.value)}
-                    />
+                    <Label htmlFor="portfolio">Portfolio / GitHub (optional)</Label>
+                    <Input id="portfolio" placeholder="https://github.com/username" value={form.portfolio} onChange={(e) => update("portfolio", e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="degree">Highest degree</Label>
-                    <div
-                      className="grid grid-cols-4 gap-2"
-                      role="radiogroup"
-                      aria-label="Degree"
-                    >
-                      {["none", "bachelor", "master", "phd"].map((d) => (
-                        <button
-                          key={d}
-                          type="button"
-                          role="radio"
-                          aria-checked={form.degree === d}
-                          onClick={() => update("degree", d as any)}
-                          className={`rounded-md border px-3 py-2 text-sm ${form.degree === d ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
-                        >
-                          {d}
-                        </button>
-                      ))}
-                    </div>
+                    <Select value={form.degree} onValueChange={(v) => update("degree", v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="bachelor">Bachelor</SelectItem>
+                        <SelectItem value="master">Master</SelectItem>
+                        <SelectItem value="phd">PhD</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="certs">Certifications (optional)</Label>
-                  <Input
-                    id="certs"
-                    placeholder="AWS CCP, Google Data Analytics"
-                    value={form.certifications}
-                    onChange={(e) => update("certifications", e.target.value)}
-                  />
+                  <Input id="certs" placeholder="AWS CCP, Google Data Analytics" value={form.certifications} onChange={(e) => update("certifications", e.target.value)} />
+                  <div className="flex flex-wrap gap-2">
+                    {CERTS.map((c) => (
+                      <Button key={c} type="button" size="sm" variant="outline" className="rounded-full" onClick={() => update("certifications", (form.certifications ? form.certifications + ", " : "") + c)}>
+                        + {c}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="space-y-2">

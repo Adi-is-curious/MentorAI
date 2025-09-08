@@ -395,18 +395,31 @@ export default function Assessment() {
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       "React",
+                      "Next.js",
+                      "Vue",
+                      "Svelte",
                       "Node",
                       "Express",
                       "Django",
                       "Flask",
-                      "TensorFlow",
-                      "PyTorch",
+                      "Laravel",
+                      "Spring",
+                      "GraphQL",
+                      "Prisma",
                       "Postgres",
                       "MongoDB",
+                      "Redis",
+                      "Kafka",
+                      "RabbitMQ",
+                      "Elasticsearch",
                       "Docker",
                       "Kubernetes",
+                      "Ansible",
+                      "Terraform",
+                      "GitHub Actions",
                       "AWS",
                       "GCP",
+                      "Azure",
                       "Figma",
                     ].map((tool) => (
                       <label
@@ -426,6 +439,25 @@ export default function Assessment() {
                         <span>{tool}</span>
                       </label>
                     ))}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Checkbox
+                      checked={form.tools.some((x) => x.startsWith("Other:"))}
+                      onCheckedChange={(c) => {
+                        const base = form.tools.filter((x) => !x.startsWith("Other:"));
+                        const val = (document.getElementById("other-tool") as HTMLInputElement | null)?.value?.trim();
+                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        update("tools", next as any);
+                      }}
+                      aria-label="Other tool"
+                    />
+                    <Input id="other-tool" placeholder="Other (type here)" onBlur={(e) => {
+                      const base = form.tools.filter((x) => !x.startsWith("Other:"));
+                      const val = e.target.value.trim();
+                      const has = form.tools.some((x) => x.startsWith("Other:"));
+                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
+                      update("tools", next as any);
+                    }} />
                   </div>
                 </div>
 

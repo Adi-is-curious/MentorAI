@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { AnalyzeResponse } from "@shared/api";
 import { Link } from "react-router-dom";
+import RoadmapGame from "@/components/resources/RoadmapGame";
 
 const domainResources: Record<string, { title: string; url: string }[]> = {
   "Data Science": [
@@ -39,6 +40,11 @@ const domainResources: Record<string, { title: string; url: string }[]> = {
     { title: "DeepLearning.AI", url: "https://www.deeplearning.ai/" },
     { title: "Hugging Face Course", url: "https://huggingface.co/learn" },
     { title: "Practical DL", url: "https://course.fast.ai/" },
+  ],
+  "Prompt Engineering": [
+    { title: "LangChain Docs", url: "https://python.langchain.com/docs/get_started/introduction/" },
+    { title: "Prompt Engineering Guide", url: "https://www.promptingguide.ai/" },
+    { title: "LlamaIndex", url: "https://docs.llamaindex.ai/" },
   ],
   "Cybersecurity": [
     { title: "TryHackMe", url: "https://tryhackme.com/" },
@@ -95,33 +101,7 @@ export default function Resources() {
         </div>
 
         {topDomain && items ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Roadmap for {topDomain}</CardTitle>
-              <CardDescription>
-                Start here to build strong foundations.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ol className="space-y-2">
-                {items.map((r, i) => (
-                  <li key={r.url} className="flex items-start gap-2">
-                    <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                      {i + 1}
-                    </span>
-                    <a
-                      className="underline underline-offset-4"
-                      href={r.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {r.title}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </CardContent>
-          </Card>
+          <RoadmapGame domain={topDomain} items={items} />
         ) : (
           <Card>
             <CardHeader>

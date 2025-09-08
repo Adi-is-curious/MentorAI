@@ -57,6 +57,10 @@ const schema = z
     portfolio: z.string().optional().default(""),
     goals: z.string().optional().default(""),
     constraints: z.string().optional().default(""),
+    interestsTags: z.array(z.string()).default([]),
+    values: z.array(z.string()).default([]),
+    learningStyle: z.enum(["project", "concept", "collab"]).default("project"),
+    environment: z.enum(["startup", "bigtech", "remote", "academia"]).default("remote"),
   })
   .refine(
     (val) =>
@@ -103,6 +107,10 @@ export default function Assessment() {
     portfolio: "",
     goals: "",
     constraints: "",
+    interestsTags: [],
+    values: [],
+    learningStyle: "project",
+    environment: "remote",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -392,6 +400,103 @@ export default function Assessment() {
                         <span>{tool}</span>
                       </label>
                     ))}
+                  </div>
+                </div>
+
+                {/* Interests & Motivation */}
+                <div className="space-y-2">
+                  <Label>What do you enjoy the most?</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      "Problem solving",
+                      "Building products",
+                      "Research/ML",
+                      "Security",
+                      "Systems/Backend",
+                      "UI/Design",
+                      "Data storytelling",
+                    ].map((tag) => (
+                      <label key={tag} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                        <Checkbox
+                          checked={form.interestsTags.includes(tag)}
+                          onCheckedChange={(c) => {
+                            const next = c
+                              ? [...form.interestsTags, tag]
+                              : form.interestsTags.filter((x) => x !== tag);
+                            update("interestsTags", next as any);
+                          }}
+                          aria-label={tag}
+                        />
+                        <span>{tag}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Values */}
+                <div className="space-y-2">
+                  <Label>Work values that matter</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["Impact", "Salary", "Flexibility", "Stability", "Innovation", "Mentorship"].map((val) => (
+                      <label key={val} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
+                        <Checkbox
+                          checked={form.values.includes(val)}
+                          onCheckedChange={(c) => {
+                            const next = c ? [...form.values, val] : form.values.filter((x) => x !== val);
+                            update("values", next as any);
+                          }}
+                          aria-label={val}
+                        />
+                        <span>{val}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Learning style & Environment */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Learning style</Label>
+                    <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Learning style">
+                      {[
+                        { v: "project", l: "Project-based" },
+                        { v: "concept", l: "Concept-first" },
+                        { v: "collab", l: "Collaborative" },
+                      ].map((o) => (
+                        <button
+                          key={o.v}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.learningStyle === (o.v as any)}
+                          onClick={() => update("learningStyle", o.v as any)}
+                          className={`rounded-md border px-3 py-2 text-sm ${form.learningStyle === o.v ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
+                        >
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Preferred environment</Label>
+                    <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Preferred environment">
+                      {[
+                        { v: "startup", l: "Startup" },
+                        { v: "bigtech", l: "Big Tech" },
+                        { v: "remote", l: "Remote-first" },
+                        { v: "academia", l: "Open-source/Academia" },
+                      ].map((o) => (
+                        <button
+                          key={o.v}
+                          type="button"
+                          role="radio"
+                          aria-checked={form.environment === (o.v as any)}
+                          onClick={() => update("environment", o.v as any)}
+                          className={`rounded-md border px-3 py-2 text-sm ${form.environment === o.v ? "border-primary bg-primary/10" : "hover:bg-accent"}`}
+                        >
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 

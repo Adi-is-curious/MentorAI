@@ -473,6 +473,14 @@ export default function Assessment() {
                       "Systems/Backend",
                       "UI/Design",
                       "Data storytelling",
+                      "DevOps",
+                      "Cloud Architecture",
+                      "Data Engineering",
+                      "MLOps",
+                      "UX Research",
+                      "Mobile",
+                      "AR/VR",
+                      "Robotics",
                     ].map((tag) => (
                       <label key={tag} className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent">
                         <Checkbox
@@ -488,6 +496,25 @@ export default function Assessment() {
                         <span>{tag}</span>
                       </label>
                     ))}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Checkbox
+                      checked={form.interestsTags.some((x) => x.startsWith("Other:"))}
+                      onCheckedChange={(c) => {
+                        const base = form.interestsTags.filter((x) => !x.startsWith("Other:"));
+                        const val = (document.getElementById("other-enjoy") as HTMLInputElement | null)?.value?.trim();
+                        const next = c && val ? [...base, `Other: ${val}`] : base;
+                        update("interestsTags", next as any);
+                      }}
+                      aria-label="Other interest"
+                    />
+                    <Input id="other-enjoy" placeholder="Other (type here)" onBlur={(e) => {
+                      const base = form.interestsTags.filter((x) => !x.startsWith("Other:"));
+                      const val = e.target.value.trim();
+                      const has = form.interestsTags.some((x) => x.startsWith("Other:"));
+                      const next = has && val ? [...base, `Other: ${val}`] : has ? base : base;
+                      update("interestsTags", next as any);
+                    }} />
                   </div>
                 </div>
 

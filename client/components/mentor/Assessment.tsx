@@ -128,23 +128,33 @@ export default function Assessment() {
 
   const POPULAR_SKILLS = [
     "react",
+    "next.js",
     "typescript",
+    "javascript",
     "node",
+    "express",
+    "graphql",
     "sql",
     "python",
+    "pandas",
     "docker",
     "kubernetes",
     "aws",
+    "gcp",
     "ml fundamentals",
+    "pytorch",
   ];
   const POPULAR_INTERESTS = [
     "frontend",
     "backend",
     "ai/ml",
+    "prompt engineering",
     "security",
     "cloud/devops",
     "product",
     "data science",
+    "mobile",
+    "ar/vr",
   ];
   const CERTS = [
     "AWS CCP",

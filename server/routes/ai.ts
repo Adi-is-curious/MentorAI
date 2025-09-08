@@ -20,11 +20,25 @@ export const handleAnalyze: RequestHandler = (req, res) => {
   const industries: string[] = Array.isArray(body.industries) ? body.industries : [];
   const codingLanguages: string[] = Array.isArray(body.codingLanguages) ? body.codingLanguages : [];
   const tools: string[] = Array.isArray(body.tools) ? body.tools : [];
+  const interestsTags: string[] = Array.isArray(body.interestsTags) ? body.interestsTags : [];
+  const values: string[] = Array.isArray(body.values) ? body.values : [];
+  const learningStyle = String(body.learningStyle ?? "");
+  const environment = String(body.environment ?? "");
   const goals = String(body.goals ?? "");
 
   const skillList = parseCSV(skills.toLowerCase());
   const interestList = parseCSV(interests.toLowerCase());
-  const extra = [rolePref, ...industries, ...codingLanguages, ...tools, goals]
+  const extra = [
+    rolePref,
+    ...industries,
+    ...codingLanguages,
+    ...tools,
+    ...interestsTags,
+    ...values,
+    learningStyle,
+    environment,
+    goals,
+  ]
     .filter(Boolean)
     .join(", ");
   const text = `${skills} ${interests} ${resumeText} ${extra}`.toLowerCase();

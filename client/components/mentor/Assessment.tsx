@@ -237,6 +237,12 @@ export default function Assessment() {
     setApiError(null);
     try {
       localStorage.setItem("mentorai_last_inputs", JSON.stringify(parsed.data));
+      // Save to backend (Neon) in background; ignore failure
+      fetch("/api/quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      }).catch(() => {});
       setChoiceOpen(true);
     } catch (err) {
       setApiError("Unable to save your responses locally.");

@@ -8,23 +8,42 @@ import {
 import { Button } from "@/components/ui/button";
 import type { AnalyzeRequest, AnalyzeResponse } from "@shared/api";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Suggestions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<AnalyzeResponse | null>(null);
+  const location = useLocation();
 
   useEffect(() => {
     async function run() {
-      const saved = localStorage.getItem("mentorai_last_inputs");
-      if (!saved) {
+      let body: AnalyzeRequest | null = null;
+      const nav = (location as any)?.state as any;
+
+      if (nav && typeof nav === "object") {
+        body = {
+          skills: String(nav.skills ?? ""),
+          interests: String(nav.interests ?? ""),
+          resumeText: String(nav.resumeText ?? ""),
+          ...(nav as any),
+        } as AnalyzeRequest;
+      } else {
+        const saved = localStorage.getItem("mentorai_last_inputs");
+        if (saved) {
+          try {
+            body = JSON.parse(saved) as AnalyzeRequest;
+          } catch {}
+        }
+      }
+
+      if (!body) {
         setError("No responses found. Please take the quiz first.");
         setLoading(false);
         return;
       }
+
       try {
-        const body = JSON.parse(saved) as AnalyzeRequest;
         const res = await fetch("/api/ai/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -41,7 +60,7 @@ export default function Suggestions() {
       }
     }
     run();
-  }, []);
+  }, [location]);
 
   const top = useMemo(() => data?.suggestions?.[0]?.domain, [data]);
 

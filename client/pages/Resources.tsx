@@ -40,6 +40,16 @@ const domainResources: Record<string, { title: string; url: string }[]> = {
     { title: "Hugging Face Course", url: "https://huggingface.co/learn" },
     { title: "Practical DL", url: "https://course.fast.ai/" },
   ],
+  "Cybersecurity": [
+    { title: "TryHackMe", url: "https://tryhackme.com/" },
+    { title: "Blue Team Labs Online", url: "https://blueteamlabs.online/" },
+    { title: "OWASP Top 10", url: "https://owasp.org/www-project-top-ten/" },
+  ],
+  "Cloud/DevOps": [
+    { title: "AWS Skill Builder", url: "https://skillbuilder.aws/" },
+    { title: "Kubernetes Docs", url: "https://kubernetes.io/docs/home/" },
+    { title: "Terraform Docs", url: "https://developer.hashicorp.com/terraform/docs" },
+  ],
   "Product Management": [
     { title: "SVPG Articles", url: "https://www.svpg.com/articles/" },
     { title: "Refactoring UI (for PMs)", url: "https://refactoringui.com/" },

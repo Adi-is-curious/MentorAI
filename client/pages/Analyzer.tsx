@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { AnalyzeResponse, AnalyzeRequest } from "@shared/api";
 import { Link, useLocation } from "react-router-dom";
 
@@ -84,9 +85,17 @@ export default function Analyzer() {
         </div>
 
         {loading ? (
-          <div className="space-y-2">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/40 border-t-primary" />
+              <p className="text-sm text-muted-foreground">Analyzing…</p>
+            </div>
             <Progress value={66} />
-            <p className="text-sm text-muted-foreground">Analyzing...</p>
+            <div className="grid gap-2">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-10/12" />
+              <Skeleton className="h-3 w-8/12" />
+            </div>
           </div>
         ) : error ? (
           <Card>

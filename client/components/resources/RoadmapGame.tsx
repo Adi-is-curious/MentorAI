@@ -76,6 +76,33 @@ export default function RoadmapGame({ domain, items }: { domain: string; items: 
           { title: "Mock interview / peer review" },
         ],
       },
+      {
+        id: "L4",
+        title: "Level 4 · Interview Ready",
+        quests: [
+          { title: "Solve 15 practice problems" },
+          { title: "2 system design or case studies" },
+          { title: "Resume tailored to target role" },
+        ],
+      },
+      {
+        id: "L5",
+        title: "Level 5 · Specialize",
+        quests: [
+          { title: "Deep dive course in a subdomain", url: items[2]?.url },
+          { title: "Advanced project with real users" },
+          { title: "Mentor/teach someone a concept" },
+        ],
+      },
+      {
+        id: "B1",
+        title: "Boss Challenge · Capstone",
+        quests: [
+          { title: "Ship a polished capstone with demo video" },
+          { title: "Publish a detailed write-up" },
+          { title: "Get external feedback and iterate" },
+        ],
+      },
     ];
     // Add remaining domain items as optional side quests
     const extra = items.slice(2).map((it) => ({ title: `Side Quest: ${it.title}`, url: it.url }));

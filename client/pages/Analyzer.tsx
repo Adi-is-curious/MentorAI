@@ -39,6 +39,16 @@ export default function Analyzer() {
       }
 
       if (!body) {
+        try {
+          const latest = await fetch("/api/quiz/latest");
+          if (latest.ok) {
+            const j = await latest.json();
+            body = j.data as AnalyzeRequest;
+          }
+        } catch {}
+      }
+
+      if (!body) {
         setError("No responses found. Please take the quiz first.");
         setLoading(false);
         return;

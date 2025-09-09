@@ -21,6 +21,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import DailyTodos from "@/components/todos/DailyTodos";
 
 export default function Index() {
   return (
@@ -87,6 +88,13 @@ export default function Index() {
               </ul>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* Today's Goals */}
+      <section className="container pb-10">
+        <div className="grid gap-6 md:grid-cols-2">
+          <DailyTodos />
         </div>
       </section>
 

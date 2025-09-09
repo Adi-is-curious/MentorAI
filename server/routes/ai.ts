@@ -76,43 +76,101 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     {
       domain: "Frontend Engineering",
       baseReason: "UI/UX focus with JavaScript, React, and CSS",
-      keywords: ["react", "javascript", "typescript", "css", "ui", "design", "tailwind", "next"],
+      keywords: [
+        "react",
+        "javascript",
+        "typescript",
+        "css",
+        "ui",
+        "design",
+        "tailwind",
+        "next",
+      ],
       boosts: ["frontend", "web", "ui"],
     },
     {
       domain: "Backend Engineering",
       baseReason: "API/database strengths with Node and SQL",
-      keywords: ["node", "express", "api", "database", "postgres", "sql", "prisma", "auth"],
+      keywords: [
+        "node",
+        "express",
+        "api",
+        "database",
+        "postgres",
+        "sql",
+        "prisma",
+        "auth",
+      ],
       boosts: ["backend", "api", "server"],
     },
     {
       domain: "AI/ML Engineering",
       baseReason: "model building and ML frameworks",
-      keywords: ["ml", "machine learning", "ai", "pytorch", "tensorflow", "llm", "huggingface"],
+      keywords: [
+        "ml",
+        "machine learning",
+        "ai",
+        "pytorch",
+        "tensorflow",
+        "llm",
+        "huggingface",
+      ],
       boosts: ["ai/ml", "mlops"],
     },
     {
       domain: "Prompt Engineering",
       baseReason: "LLM tooling and prompt design",
-      keywords: ["prompt", "rag", "langchain", "llamaindex", "vector", "retrieval", "openai"],
+      keywords: [
+        "prompt",
+        "rag",
+        "langchain",
+        "llamaindex",
+        "vector",
+        "retrieval",
+        "openai",
+      ],
       boosts: ["prompt engineering", "genai"],
     },
     {
       domain: "Cybersecurity",
       baseReason: "security mindset and defensive tooling",
-      keywords: ["security", "siem", "soc", "threat", "vulnerability", "owasp", "splunk"],
+      keywords: [
+        "security",
+        "siem",
+        "soc",
+        "threat",
+        "vulnerability",
+        "owasp",
+        "splunk",
+      ],
       boosts: ["security", "blue team", "red team"],
     },
     {
       domain: "Cloud/DevOps",
       baseReason: "cloud platforms and automation (CI/CD)",
-      keywords: ["aws", "gcp", "azure", "docker", "kubernetes", "devops", "terraform", "ci/cd"],
+      keywords: [
+        "aws",
+        "gcp",
+        "azure",
+        "docker",
+        "kubernetes",
+        "devops",
+        "terraform",
+        "ci/cd",
+      ],
       boosts: ["cloud/devops", "sre"],
     },
     {
       domain: "Product Management",
       baseReason: "product thinking and stakeholder collaboration",
-      keywords: ["product", "roadmap", "stakeholder", "communication", "analytics", "experimentation"],
+      keywords: [
+        "product",
+        "roadmap",
+        "stakeholder",
+        "communication",
+        "analytics",
+        "experimentation",
+      ],
       boosts: ["product", "pm"],
     },
   ];
@@ -138,13 +196,18 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     // Role preference boosts
     if (rolePref) {
       const rp = rolePref.toLowerCase();
-      if (rp === "engineering" && (c.domain.includes("Frontend") || c.domain.includes("Backend"))) score += 1.5;
+      if (
+        rp === "engineering" &&
+        (c.domain.includes("Frontend") || c.domain.includes("Backend"))
+      )
+        score += 1.5;
       if (rp === "data" && c.domain.includes("Data")) score += 2;
       if (rp === "product" && c.domain.includes("Product")) score += 2;
       if (rp === "design" && c.domain.includes("Frontend")) score += 1;
     }
     // Industry hints
-    for (const ind of industries) if (text.includes(ind.toLowerCase())) score += 0.5;
+    for (const ind of industries)
+      if (text.includes(ind.toLowerCase())) score += 0.5;
     // Learning style/environment tiny nudges
     if (learningStyle) score += 0.1;
     if (environment) score += 0.1;

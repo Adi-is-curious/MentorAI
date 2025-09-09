@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { AnalyzeResponse } from "@shared/api";
 import { Link } from "react-router-dom";
 import RoadmapGame from "@/components/resources/RoadmapGame";
@@ -14,6 +15,7 @@ import RoadmapGame from "@/components/resources/RoadmapGame";
 const domainResources: Record<string, { title: string; url: string }[]> = {
   "Data Science": [
     { title: "Kaggle Learn", url: "https://www.kaggle.com/learn" },
+    { title: "W3Schools Python", url: "https://www.w3schools.com/python/" },
     {
       title: "fast.ai Practical Deep Learning",
       url: "https://course.fast.ai/",
@@ -35,6 +37,9 @@ const domainResources: Record<string, { title: string; url: string }[]> = {
       url: "https://www.typescriptlang.org/docs/",
     },
     { title: "web.dev", url: "https://web.dev/learn/" },
+    { title: "W3Schools HTML", url: "https://www.w3schools.com/html/" },
+    { title: "W3Schools CSS", url: "https://www.w3schools.com/css/" },
+    { title: "W3Schools JavaScript", url: "https://www.w3schools.com/js/" },
   ],
   "Backend Engineering": [
     {
@@ -43,6 +48,7 @@ const domainResources: Record<string, { title: string; url: string }[]> = {
     },
     { title: "Node.js Docs", url: "https://nodejs.org/en/docs" },
     { title: "PostgreSQL Docs", url: "https://www.postgresql.org/docs/" },
+    { title: "W3Schools SQL", url: "https://www.w3schools.com/sql/" },
     { title: "roadmap.sh Backend", url: "https://roadmap.sh/backend" },
   ],
   "Full Stack Engineering": [
@@ -202,7 +208,12 @@ export default function Resources() {
   }, []);
 
   const topDomain = useMemo(() => result?.suggestions?.[0]?.domain, [result]);
-  const items = topDomain ? domainResources[topDomain] : undefined;
+  const [selected, setSelected] = useState<string | undefined>(topDomain);
+  useEffect(() => {
+    if (topDomain) setSelected((prev) => prev ?? topDomain);
+  }, [topDomain]);
+  const allSuggested = useMemo(() => (result?.suggestions?.map((s) => s.domain) ?? []).filter((d, i, a) => a.indexOf(d) === i), [result]);
+  const items = selected ? domainResources[selected] : undefined;
 
   return (
     <section className="container py-12">
@@ -216,8 +227,50 @@ export default function Resources() {
           </p>
         </div>
 
-        {topDomain && items ? (
-          <RoadmapGame domain={topDomain} items={items} />
+        {allSuggested.length > 0 ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Choose a roadmap</CardTitle>
+              <CardDescription>Select any suggested path to view its roadmap and resources.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Select value={selected} onValueChange={setSelected}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a suggested domain" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allSuggested.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div>
+                  <div className="text-sm text-muted-foreground">Suggestions</div>
+                  <ul className="mt-1 space-y-1 text-sm">
+                    {result?.suggestions?.map((s) => (
+                      <li key={s.domain}>
+                        <button
+                          className="underline underline-offset-4"
+                          onClick={() => setSelected(s.domain)}
+                        >
+                          {s.domain}
+                        </button>
+                        {selected === s.domain ? " — selected" : ""}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              {selected && items ? (
+                <RoadmapGame domain={selected} items={items} />
+              ) : (
+                <div className="text-sm text-muted-foreground">No resources for this domain yet.</div>
+              )}
+            </CardContent>
+          </Card>
         ) : (
           <Card>
             <CardHeader>
@@ -256,6 +309,9 @@ export default function Resources() {
                 </li>
               ))}
             </ul>
+            <div className="mt-4 text-sm">
+              Also see: <a className="underline underline-offset-4" href="https://www.w3schools.com/" target="_blank" rel="noreferrer">W3Schools</a> · <a className="underline underline-offset-4" href="https://www.kaggle.com/" target="_blank" rel="noreferrer">Kaggle</a>
+            </div>
           </CardContent>
         </Card>
       </div>

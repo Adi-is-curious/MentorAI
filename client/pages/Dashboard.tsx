@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import type { AnalyzeResponse } from "@shared/api";
 import { Link } from "react-router-dom";
+import DailyTodos from "@/components/todos/DailyTodos";
 import {
   Bar,
   BarChart,
@@ -245,6 +246,8 @@ export default function Dashboard() {
             </ul>
           </CardContent>
         </Card>
+
+        <DailyTodos />
       </div>
 
       <div className="mx-auto mt-6 grid max-w-5xl gap-6 md:grid-cols-4">

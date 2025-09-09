@@ -66,6 +66,7 @@ const schema = z
     constraints: z.string().optional().default(""),
     interestsTags: z.array(z.string()).default([]),
     values: z.array(z.string()).default([]),
+    roles: z.array(z.string()).default([]),
     learningStyle: z.enum(["project", "concept", "collab"]).default("project"),
     environment: z
       .enum(["startup", "bigtech", "remote", "academia"])
@@ -118,6 +119,7 @@ export default function Assessment() {
     constraints: "",
     interestsTags: [],
     values: [],
+    roles: [],
     learningStyle: "project",
     environment: "remote",
   });
@@ -525,6 +527,52 @@ export default function Assessment() {
                         update("tools", next as any);
                       }}
                     />
+                  </div>
+                </div>
+
+                {/* Target roles */}
+                <div className="space-y-2">
+                  <Label>Target roles</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      "Software Engineer",
+                      "Frontend Developer",
+                      "Backend Developer",
+                      "Full Stack Developer",
+                      "Mobile App Developer",
+                      "DevOps Engineer",
+                      "Cloud Engineer",
+                      "Cybersecurity Analyst",
+                      "Site Reliability Engineer",
+                      "AI/ML Engineer",
+                      "Data Scientist",
+                      "Data Engineer",
+                      "UI/UX Designer",
+                      "Product Manager",
+                      "QA/Test Engineer",
+                      "Game Developer",
+                      "Embedded Systems Engineer",
+                      "Systems Architect",
+                      "Technical Writer",
+                      "Database Administrator",
+                    ].map((role) => (
+                      <label
+                        key={role}
+                        className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"
+                      >
+                        <Checkbox
+                          checked={form.roles.includes(role)}
+                          onCheckedChange={(c) => {
+                            const next = c
+                              ? [...form.roles, role]
+                              : form.roles.filter((x) => x !== role);
+                            update("roles", next as any);
+                          }}
+                          aria-label={role}
+                        />
+                        <span>{role}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
 

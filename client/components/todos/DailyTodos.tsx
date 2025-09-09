@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,7 +20,11 @@ function todayKey(prefix = "mentorai_todos") {
   return `${prefix}_${y}-${m}-${day}`;
 }
 
-export default function DailyTodos({ title = "Today's Goals" }: { title?: string }) {
+export default function DailyTodos({
+  title = "Today's Goals",
+}: {
+  title?: string;
+}) {
   const storageKey = useMemo(() => todayKey(), []);
   const [items, setItems] = useState<Todo[]>([]);
   const [text, setText] = useState("");
@@ -35,7 +45,10 @@ export default function DailyTodos({ title = "Today's Goals" }: { title?: string
   function add() {
     const t = text.trim();
     if (!t) return;
-    setItems((prev) => [{ id: Math.random().toString(36).slice(2), text: t, done: false }, ...prev]);
+    setItems((prev) => [
+      { id: Math.random().toString(36).slice(2), text: t, done: false },
+      ...prev,
+    ]);
     setText("");
   }
 
@@ -67,13 +80,25 @@ export default function DailyTodos({ title = "Today's Goals" }: { title?: string
         </div>
         <ul className="mt-4 space-y-2">
           {items.length === 0 && (
-            <li className="text-sm text-muted-foreground">No goals yet. Add your first.</li>
+            <li className="text-sm text-muted-foreground">
+              No goals yet. Add your first.
+            </li>
           )}
           {items.map((i) => (
-            <li key={i.id} className="flex items-center justify-between gap-3 rounded-md border p-2">
+            <li
+              key={i.id}
+              className="flex items-center justify-between gap-3 rounded-md border p-2"
+            >
               <label className="flex items-center gap-2">
-                <Checkbox checked={i.done} onCheckedChange={(v) => toggle(i.id, Boolean(v))} />
-                <span className={i.done ? "line-through text-muted-foreground" : ""}>{i.text}</span>
+                <Checkbox
+                  checked={i.done}
+                  onCheckedChange={(v) => toggle(i.id, Boolean(v))}
+                />
+                <span
+                  className={i.done ? "line-through text-muted-foreground" : ""}
+                >
+                  {i.text}
+                </span>
               </label>
               <Button size="sm" variant="outline" onClick={() => remove(i.id)}>
                 Remove

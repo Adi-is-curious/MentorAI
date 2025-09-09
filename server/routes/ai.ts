@@ -49,53 +49,119 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     .join(", ");
   const text = `${skills} ${interests} ${resumeText} ${extra}`.toLowerCase();
 
-  const domains: { domain: string; reason: string; match: RegExp }[] = [
+  type Domain = {
+    domain: string;
+    keywords: string[];
+    boosts?: string[];
+    baseReason: string;
+  };
+
+  const catalog: Domain[] = [
     {
       domain: "Data Science",
-      reason: "strong analytical and Python background",
-      match: /(python|pandas|numpy|statistics|ml|data)/,
+      baseReason: "analytical mindset with Python/SQL and data tooling",
+      keywords: [
+        "python",
+        "pandas",
+        "numpy",
+        "statistics",
+        "ml",
+        "data",
+        "sql",
+        "visualization",
+        "notebook",
+      ],
+      boosts: ["data", "analytics", "bi"],
     },
     {
       domain: "Frontend Engineering",
-      reason: "solid UI/UX and JavaScript skills",
-      match: /(react|javascript|typescript|css|ui|design)/,
+      baseReason: "UI/UX focus with JavaScript, React, and CSS",
+      keywords: ["react", "javascript", "typescript", "css", "ui", "design", "tailwind", "next"],
+      boosts: ["frontend", "web", "ui"],
     },
     {
       domain: "Backend Engineering",
-      reason: "experience with APIs and databases",
-      match: /(node|express|api|database|postgres|sql)/,
+      baseReason: "API/database strengths with Node and SQL",
+      keywords: ["node", "express", "api", "database", "postgres", "sql", "prisma", "auth"],
+      boosts: ["backend", "api", "server"],
     },
     {
       domain: "AI/ML Engineering",
-      reason: "interest in machine learning and model building",
-      match: /(ml|machine learning|ai|pytorch|tensorflow|llm)/,
+      baseReason: "model building and ML frameworks",
+      keywords: ["ml", "machine learning", "ai", "pytorch", "tensorflow", "llm", "huggingface"],
+      boosts: ["ai/ml", "mlops"],
     },
     {
       domain: "Prompt Engineering",
-      reason: "strength in LLM tooling and prompt design",
-      match: /(prompt|rag|langchain|llamaindex|vector|retrieval)/,
+      baseReason: "LLM tooling and prompt design",
+      keywords: ["prompt", "rag", "langchain", "llamaindex", "vector", "retrieval", "openai"],
+      boosts: ["prompt engineering", "genai"],
     },
     {
       domain: "Cybersecurity",
-      reason: "aptitude for securing systems and incident response",
-      match: /(security|siem|soc|blue team|threat|vulnerability|owasp|splunk)/,
+      baseReason: "security mindset and defensive tooling",
+      keywords: ["security", "siem", "soc", "threat", "vulnerability", "owasp", "splunk"],
+      boosts: ["security", "blue team", "red team"],
     },
     {
       domain: "Cloud/DevOps",
-      reason: "experience with cloud platforms and automation",
-      match: /(aws|gcp|azure|docker|kubernetes|devops|terraform|ci\/cd)/,
+      baseReason: "cloud platforms and automation (CI/CD)",
+      keywords: ["aws", "gcp", "azure", "docker", "kubernetes", "devops", "terraform", "ci/cd"],
+      boosts: ["cloud/devops", "sre"],
     },
     {
       domain: "Product Management",
-      reason: "blend of technical and communication skills",
-      match: /(product|roadmap|stakeholder|communication|analytics)/,
+      baseReason: "product thinking and stakeholder collaboration",
+      keywords: ["product", "roadmap", "stakeholder", "communication", "analytics", "experimentation"],
+      boosts: ["product", "pm"],
     },
   ];
 
-  const matched = domains.filter((d) => d.match.test(text));
-  const suggestions = (matched.length ? matched : domains.slice(0, 2)).map(
-    ({ domain, reason }) => ({ domain, reason }),
-  );
+  const tokens = text
+    .split(/[^a-z0-9+.#/]+/)
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  const scores = catalog.map((c) => {
+    let score = 0;
+    const matched: string[] = [];
+    for (const k of c.keywords) {
+      const has = tokens.includes(k) || text.includes(k);
+      if (has) {
+        score += 3;
+        matched.push(k);
+      }
+    }
+    for (const b of c.boosts || []) {
+      if (tokens.includes(b)) score += 1.5;
+    }
+    // Role preference boosts
+    if (rolePref) {
+      const rp = rolePref.toLowerCase();
+      if (rp === "engineering" && (c.domain.includes("Frontend") || c.domain.includes("Backend"))) score += 1.5;
+      if (rp === "data" && c.domain.includes("Data")) score += 2;
+      if (rp === "product" && c.domain.includes("Product")) score += 2;
+      if (rp === "design" && c.domain.includes("Frontend")) score += 1;
+    }
+    // Industry hints
+    for (const ind of industries) if (text.includes(ind.toLowerCase())) score += 0.5;
+    // Learning style/environment tiny nudges
+    if (learningStyle) score += 0.1;
+    if (environment) score += 0.1;
+
+    return { domain: c.domain, score, matched, baseReason: c.baseReason };
+  });
+
+  scores.sort((a, b) => b.score - a.score);
+  const top = scores.slice(0, 4);
+
+  const suggestions = top.map((t) => ({
+    domain: t.domain,
+    reason:
+      t.matched.length > 0
+        ? `based on (${t.matched.slice(0, 4).join(", ")}) and your preferences`
+        : t.baseReason,
+  }));
 
   const canonicalSkills = [
     "python",

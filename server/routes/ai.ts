@@ -62,73 +62,172 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     {
       domain: "Data Science",
       baseReason: "analytical mindset with Python/SQL and data tooling",
-      keywords: ["python", "pandas", "numpy", "statistics", "ml", "data", "sql", "visualization", "notebook"],
+      keywords: [
+        "python",
+        "pandas",
+        "numpy",
+        "statistics",
+        "ml",
+        "data",
+        "sql",
+        "visualization",
+        "notebook",
+      ],
       boosts: ["data", "analytics", "bi"],
     },
     {
       domain: "AI/ML Engineering",
       baseReason: "model building and ML frameworks",
-      keywords: ["ml", "machine learning", "ai", "pytorch", "tensorflow", "llm", "huggingface"],
+      keywords: [
+        "ml",
+        "machine learning",
+        "ai",
+        "pytorch",
+        "tensorflow",
+        "llm",
+        "huggingface",
+      ],
       boosts: ["ai/ml", "mlops"],
     },
     {
       domain: "Frontend Engineering",
       baseReason: "UI/UX focus with JavaScript, React, and CSS",
-      keywords: ["react", "javascript", "typescript", "css", "ui", "design", "tailwind", "next"],
+      keywords: [
+        "react",
+        "javascript",
+        "typescript",
+        "css",
+        "ui",
+        "design",
+        "tailwind",
+        "next",
+      ],
       boosts: ["frontend", "web", "ui"],
     },
     {
       domain: "Backend Engineering",
       baseReason: "API/database strengths with Node and SQL",
-      keywords: ["node", "express", "api", "database", "postgres", "sql", "prisma", "auth"],
+      keywords: [
+        "node",
+        "express",
+        "api",
+        "database",
+        "postgres",
+        "sql",
+        "prisma",
+        "auth",
+      ],
       boosts: ["backend", "api", "server"],
     },
     {
       domain: "Full Stack Engineering",
       baseReason: "end‑to‑end product building across frontend and backend",
-      keywords: ["fullstack", "full stack", "react", "node", "next", "api", "sql"],
+      keywords: [
+        "fullstack",
+        "full stack",
+        "react",
+        "node",
+        "next",
+        "api",
+        "sql",
+      ],
       boosts: ["full stack", "software engineer"],
     },
     {
       domain: "Mobile Development",
       baseReason: "building native or cross‑platform mobile apps",
-      keywords: ["ios", "android", "swift", "kotlin", "flutter", "react native"],
+      keywords: [
+        "ios",
+        "android",
+        "swift",
+        "kotlin",
+        "flutter",
+        "react native",
+      ],
       boosts: ["mobile", "app"],
     },
     {
       domain: "SRE",
       baseReason: "reliability, monitoring, and incident response",
-      keywords: ["sre", "observability", "prometheus", "grafana", "alerts", "oncall", "reliability"],
+      keywords: [
+        "sre",
+        "observability",
+        "prometheus",
+        "grafana",
+        "alerts",
+        "oncall",
+        "reliability",
+      ],
       boosts: ["sre", "reliability"],
     },
     {
       domain: "Cybersecurity",
       baseReason: "security mindset and defensive tooling",
-      keywords: ["security", "siem", "soc", "threat", "vulnerability", "owasp", "splunk", "mitre"],
+      keywords: [
+        "security",
+        "siem",
+        "soc",
+        "threat",
+        "vulnerability",
+        "owasp",
+        "splunk",
+        "mitre",
+      ],
       boosts: ["security", "blue team", "red team"],
     },
     {
       domain: "Cloud/DevOps",
       baseReason: "cloud platforms and automation (CI/CD)",
-      keywords: ["aws", "gcp", "azure", "docker", "kubernetes", "devops", "terraform", "ci/cd"],
+      keywords: [
+        "aws",
+        "gcp",
+        "azure",
+        "docker",
+        "kubernetes",
+        "devops",
+        "terraform",
+        "ci/cd",
+      ],
       boosts: ["cloud/devops", "sre"],
     },
     {
       domain: "UI/UX Design",
       baseReason: "designing usable, accessible interfaces",
-      keywords: ["ui", "ux", "figma", "prototyping", "wireframe", "design", "research"],
+      keywords: [
+        "ui",
+        "ux",
+        "figma",
+        "prototyping",
+        "wireframe",
+        "design",
+        "research",
+      ],
       boosts: ["design", "ui/ux"],
     },
     {
       domain: "Product Management",
       baseReason: "product thinking and stakeholder collaboration",
-      keywords: ["product", "roadmap", "stakeholder", "communication", "analytics", "experimentation"],
+      keywords: [
+        "product",
+        "roadmap",
+        "stakeholder",
+        "communication",
+        "analytics",
+        "experimentation",
+      ],
       boosts: ["product", "pm"],
     },
     {
       domain: "QA/Test",
       baseReason: "quality assurance and test automation",
-      keywords: ["test", "automation", "qa", "selenium", "cypress", "playwright"],
+      keywords: [
+        "test",
+        "automation",
+        "qa",
+        "selenium",
+        "cypress",
+        "playwright",
+      ],
       boosts: ["qa", "testing"],
     },
     {
@@ -152,13 +251,26 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     {
       domain: "Database Administration",
       baseReason: "operating and tuning database systems",
-      keywords: ["postgres", "mysql", "oracle", "backup", "replication", "index"],
+      keywords: [
+        "postgres",
+        "mysql",
+        "oracle",
+        "backup",
+        "replication",
+        "index",
+      ],
       boosts: ["dba", "database"],
     },
     {
       domain: "Solutions/Systems Architecture",
       baseReason: "systems design, scalability, and architecture",
-      keywords: ["architecture", "scalability", "design patterns", "high availability", "diagram"],
+      keywords: [
+        "architecture",
+        "scalability",
+        "design patterns",
+        "high availability",
+        "diagram",
+      ],
       boosts: ["architect", "solutions"],
     },
     {
@@ -191,36 +303,89 @@ export const handleAnalyze: RequestHandler = (req, res) => {
     // Role preference boosts
     if (rolePref) {
       const rp = rolePref.toLowerCase();
-      if (rp === "engineering" && (c.domain.includes("Frontend") || c.domain.includes("Backend") || c.domain.includes("Full Stack"))) score += 1.5;
-      if (rp === "data" && (c.domain.includes("Data") || c.domain.includes("AI/ML"))) score += 2;
+      if (
+        rp === "engineering" &&
+        (c.domain.includes("Frontend") ||
+          c.domain.includes("Backend") ||
+          c.domain.includes("Full Stack"))
+      )
+        score += 1.5;
+      if (
+        rp === "data" &&
+        (c.domain.includes("Data") || c.domain.includes("AI/ML"))
+      )
+        score += 2;
       if (rp === "product" && c.domain.includes("Product")) score += 2;
-      if (rp === "design" && (c.domain.includes("Frontend") || c.domain.includes("UI/UX"))) score += 1.2;
+      if (
+        rp === "design" &&
+        (c.domain.includes("Frontend") || c.domain.includes("UI/UX"))
+      )
+        score += 1.2;
     }
     // Explicit role selections boost
     for (const r of roleTokens) {
       if (r.includes("frontend") && c.domain.includes("Frontend")) score += 2.5;
       if (r.includes("backend") && c.domain.includes("Backend")) score += 2.5;
-      if (r.includes("full stack") && c.domain.includes("Full Stack")) score += 2.5;
-      if ((r.includes("software engineer") || r.includes("developer")) && (c.domain.includes("Frontend") || c.domain.includes("Backend") || c.domain.includes("Full Stack"))) score += 1.5;
+      if (r.includes("full stack") && c.domain.includes("Full Stack"))
+        score += 2.5;
+      if (
+        (r.includes("software engineer") || r.includes("developer")) &&
+        (c.domain.includes("Frontend") ||
+          c.domain.includes("Backend") ||
+          c.domain.includes("Full Stack"))
+      )
+        score += 1.5;
       if (r.includes("mobile") && c.domain.includes("Mobile")) score += 2.5;
-      if ((r.includes("devops") || r.includes("sre")) && (c.domain.includes("Cloud/DevOps") || c.domain.includes("SRE"))) score += 2.5;
+      if (
+        (r.includes("devops") || r.includes("sre")) &&
+        (c.domain.includes("Cloud/DevOps") || c.domain.includes("SRE"))
+      )
+        score += 2.5;
       if (r.includes("cloud") && c.domain.includes("Cloud/DevOps")) score += 2;
-      if ((r.includes("security") || r.includes("cyber")) && c.domain.includes("Cybersecurity")) score += 2.5;
-      if (r.includes("data scientist") && c.domain.includes("Data Science")) score += 2.5;
-      if (r.includes("data engineer") && (c.domain.includes("Data Engineer") || c.domain.includes("Backend"))) score += 2;
-      if ((r.includes("ml engineer") || r.includes("ai")) && c.domain.includes("AI/ML")) score += 2.5;
-      if ((r.includes("ui") || r.includes("ux")) && c.domain.includes("UI/UX")) score += 2.5;
-      if (r.includes("product manager") && c.domain.includes("Product Management")) score += 2.5;
-      if ((r.includes("qa") || r.includes("test")) && c.domain.includes("QA/Test")) score += 2;
+      if (
+        (r.includes("security") || r.includes("cyber")) &&
+        c.domain.includes("Cybersecurity")
+      )
+        score += 2.5;
+      if (r.includes("data scientist") && c.domain.includes("Data Science"))
+        score += 2.5;
+      if (
+        r.includes("data engineer") &&
+        (c.domain.includes("Data Engineer") || c.domain.includes("Backend"))
+      )
+        score += 2;
+      if (
+        (r.includes("ml engineer") || r.includes("ai")) &&
+        c.domain.includes("AI/ML")
+      )
+        score += 2.5;
+      if ((r.includes("ui") || r.includes("ux")) && c.domain.includes("UI/UX"))
+        score += 2.5;
+      if (
+        r.includes("product manager") &&
+        c.domain.includes("Product Management")
+      )
+        score += 2.5;
+      if (
+        (r.includes("qa") || r.includes("test")) &&
+        c.domain.includes("QA/Test")
+      )
+        score += 2;
       if (r.includes("embedded") && c.domain.includes("Embedded")) score += 2;
       if (r.includes("game") && c.domain.includes("Game")) score += 2;
-      if (r.includes("blockchain") && c.domain.includes("Blockchain")) score += 2;
+      if (r.includes("blockchain") && c.domain.includes("Blockchain"))
+        score += 2;
       if (r.includes("database") && c.domain.includes("Database")) score += 2;
       if (r.includes("architect") && c.domain.includes("Architect")) score += 2;
-      if (r.includes("technical writer") && c.domain.includes("Technical Writing")) score += 2;
+      if (
+        r.includes("technical writer") &&
+        c.domain.includes("Technical Writing")
+      )
+        score += 2;
     }
     // Industry hints
-    for (const ind of industries) if (text.includes(ind.toLowerCase())) score += 0.5;
+    for (const ind of industries)
+      if (text.includes(ind.toLowerCase())) score += 0.5;
     // Learning style/environment tiny nudges
     if (learningStyle) score += 0.1;
     if (environment) score += 0.1;

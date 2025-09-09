@@ -7,7 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { AnalyzeResponse } from "@shared/api";
 import { Link } from "react-router-dom";
 import RoadmapGame from "@/components/resources/RoadmapGame";
@@ -212,7 +218,13 @@ export default function Resources() {
   useEffect(() => {
     if (topDomain) setSelected((prev) => prev ?? topDomain);
   }, [topDomain]);
-  const allSuggested = useMemo(() => (result?.suggestions?.map((s) => s.domain) ?? []).filter((d, i, a) => a.indexOf(d) === i), [result]);
+  const allSuggested = useMemo(
+    () =>
+      (result?.suggestions?.map((s) => s.domain) ?? []).filter(
+        (d, i, a) => a.indexOf(d) === i,
+      ),
+    [result],
+  );
   const items = selected ? domainResources[selected] : undefined;
 
   return (
@@ -231,7 +243,9 @@ export default function Resources() {
           <Card>
             <CardHeader>
               <CardTitle>Choose a roadmap</CardTitle>
-              <CardDescription>Select any suggested path to view its roadmap and resources.</CardDescription>
+              <CardDescription>
+                Select any suggested path to view its roadmap and resources.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">
@@ -248,7 +262,9 @@ export default function Resources() {
                   </SelectContent>
                 </Select>
                 <div>
-                  <div className="text-sm text-muted-foreground">Suggestions</div>
+                  <div className="text-sm text-muted-foreground">
+                    Suggestions
+                  </div>
                   <ul className="mt-1 space-y-1 text-sm">
                     {result?.suggestions?.map((s) => (
                       <li key={s.domain}>
@@ -267,7 +283,9 @@ export default function Resources() {
               {selected && items ? (
                 <RoadmapGame domain={selected} items={items} />
               ) : (
-                <div className="text-sm text-muted-foreground">No resources for this domain yet.</div>
+                <div className="text-sm text-muted-foreground">
+                  No resources for this domain yet.
+                </div>
               )}
             </CardContent>
           </Card>
@@ -310,7 +328,24 @@ export default function Resources() {
               ))}
             </ul>
             <div className="mt-4 text-sm">
-              Also see: <a className="underline underline-offset-4" href="https://www.w3schools.com/" target="_blank" rel="noreferrer">W3Schools</a> · <a className="underline underline-offset-4" href="https://www.kaggle.com/" target="_blank" rel="noreferrer">Kaggle</a>
+              Also see:{" "}
+              <a
+                className="underline underline-offset-4"
+                href="https://www.w3schools.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                W3Schools
+              </a>{" "}
+              ·{" "}
+              <a
+                className="underline underline-offset-4"
+                href="https://www.kaggle.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Kaggle
+              </a>
             </div>
           </CardContent>
         </Card>

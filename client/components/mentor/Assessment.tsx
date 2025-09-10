@@ -1182,6 +1182,40 @@ export default function Assessment() {
             </CardContent>
           </Card>
 
+          {/* Live interactive preview */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Live Preview</CardTitle>
+              <CardDescription>Real‑time insights based on your inputs</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-md border p-3 text-sm">
+                <div className="mb-1 font-medium">Hello{form.rolePref ? ` ${form.rolePref} explorer` : ""}!</div>
+                <div className="text-muted-foreground">
+                  {form.experience === "student"
+                    ? "We’ll emphasize foundational skills and beginner‑friendly resources."
+                    : form.experience === "junior"
+                      ? "We’ll target projects to level up toward mid-level roles."
+                      : form.experience === "mid"
+                        ? "We’ll focus on specialization and system design depth."
+                        : "We’ll tailor advanced paths and leadership growth."}
+                </div>
+              </div>
+              <div>
+                <div className="mb-2 text-sm text-muted-foreground">Likely matches</div>
+                <ul className="space-y-1 text-sm">
+                  {(previewDomains.length ? previewDomains : ["— add a few skills/interests to see suggestions —"]).map((d) => (
+                    <li key={d} className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span>{d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="text-xs text-muted-foreground">Tip: add skills (e.g., react, python, sql) or select tools/industries to refine.</div>
+            </CardContent>
+          </Card>
+
           {/* Choice dialog */}
           <Dialog open={choiceOpen} onOpenChange={setChoiceOpen}>
             <DialogContent>

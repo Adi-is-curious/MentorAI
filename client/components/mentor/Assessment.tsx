@@ -994,10 +994,11 @@ export default function Assessment() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
+                  <p className="text-xs text-muted-foreground">Add anything you’ve used in classes or projects — languages, tools, frameworks.</p>
                   <Input
                     id="skills"
                     aria-describedby="help-skills"
-                    placeholder="react, typescript, sql"
+                    placeholder="HTML, CSS, basic Python, Excel, React"
                     value={form.skills}
                     onChange={(e) => update("skills", e.target.value)}
                   />
@@ -1040,10 +1041,11 @@ export default function Assessment() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
+                  <p className="text-xs text-muted-foreground">Write what excites you — solving puzzles, designing UI, working with data, automating tasks.</p>
                   <Input
                     id="interests"
                     aria-describedby="help-interests"
-                    placeholder="ai/ml, product, fintech"
+                    placeholder="visual design, APIs, machine learning, security"
                     value={form.interests}
                     onChange={(e) => update("interests", e.target.value)}
                   />

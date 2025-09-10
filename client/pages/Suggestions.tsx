@@ -10,6 +10,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { AnalyzeRequest, AnalyzeResponse } from "@shared/api";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import RoadmapGame from "@/components/resources/RoadmapGame";
+import { domainResources } from "@/components/resources/domainResources";
 
 export default function Suggestions() {
   const [loading, setLoading] = useState(true);
@@ -74,6 +83,18 @@ export default function Suggestions() {
   }, [location]);
 
   const top = useMemo(() => data?.suggestions?.[0]?.domain, [data]);
+  const [selected, setSelected] = useState<string | undefined>(top);
+  useEffect(() => {
+    if (top) setSelected((prev) => prev ?? top);
+  }, [top]);
+  const allSuggested = useMemo(
+    () =>
+      (data?.suggestions?.map((s) => s.domain) ?? []).filter(
+        (d, i, a) => a.indexOf(d) === i,
+      ),
+    [data],
+  );
+  const items = selected ? domainResources[selected] : undefined;
 
   return (
     <section className="container py-12">
@@ -141,6 +162,79 @@ export default function Suggestions() {
                     <Link to="/dashboard">Go to Dashboard</Link>
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Explore roadmaps & resources</CardTitle>
+                <CardDescription>Select any suggested path below.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {allSuggested.length ? (
+                  <>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Select value={selected} onValueChange={setSelected}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a suggested domain" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {allSuggested.map((d) => (
+                            <SelectItem key={d} value={d}>
+                              {d}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <div>
+                        <div className="text-sm text-muted-foreground">Suggestions</div>
+                        <ul className="mt-1 space-y-1 text-sm">
+                          {data?.suggestions?.map((s) => (
+                            <li key={s.domain}>
+                              <button
+                                className="underline underline-offset-4"
+                                onClick={() => setSelected(s.domain)}
+                              >
+                                {s.domain}
+                              </button>
+                              {selected === s.domain ? " — selected" : ""}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    {selected && items ? (
+                      <>
+                        <RoadmapGame domain={selected} items={items} />
+                        <div>
+                          <div className="mt-4 text-sm font-medium">Resources</div>
+                          <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+                            {items.map((r) => (
+                              <li key={r.url}>
+                                <a
+                                  className="underline underline-offset-4"
+                                  href={r.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {r.title}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-sm text-muted-foreground">
+                        No resources for this domain yet.
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-sm text-muted-foreground">
+                    No suggestions found. Try the quiz again.
+                  </div>
+                )}
               </CardContent>
             </Card>
 

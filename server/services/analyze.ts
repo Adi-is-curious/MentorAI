@@ -26,7 +26,7 @@ function parseCSV(input: string) {
 }
 
 export function analyzeCareer(input: unknown): AnalyzeResponse {
-  const body = AnalyzeInput.parse(input);
+  const body = analyzeInputSchema.parse(input);
   const { skills, interests, resumeText } = body;
   const rolePref = body.rolePref;
   const { industries, codingLanguages, tools, interestsTags, values, roles } = body;

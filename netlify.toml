@@ -9,6 +9,21 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/api/ai/analyze"
+  status = 200
+  to = "/.netlify/functions/analyze"
+
+[[redirects]]
+  from = "/api/quiz/latest"
+  status = 200
+  to = "/.netlify/functions/quiz-latest"
+
+[[redirects]]
+  from = "/api/quiz"
+  status = 200
+  to = "/.netlify/functions/quiz-save"
+
+[[redirects]]
   force = true
   from = "/api/*"
   status = 200

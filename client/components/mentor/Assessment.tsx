@@ -169,6 +169,46 @@ export default function Assessment() {
     "Google Data Analytics",
   ];
 
+  function getPreviewSuggestions() {
+    const text = [
+      form.skills,
+      form.interests,
+      ...form.codingLanguages,
+      ...form.tools,
+      ...form.industries,
+      ...form.interestsTags,
+      ...form.roles,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    const catalog = [
+      { d: "Data Science", k: ["python", "pandas", "statistics", "ml", "data", "sql"] },
+      { d: "AI/ML Engineering", k: ["ml", "ai", "pytorch", "tensorflow", "llm"] },
+      { d: "Frontend Engineering", k: ["react", "javascript", "typescript", "css", "ui", "design", "tailwind", "next"] },
+      { d: "Backend Engineering", k: ["node", "express", "api", "postgres", "sql", "prisma"] },
+      { d: "Full Stack Engineering", k: ["fullstack", "full stack", "react", "node", "sql"] },
+      { d: "Mobile Development", k: ["ios", "android", "swift", "kotlin", "flutter", "react native"] },
+      { d: "Cybersecurity", k: ["security", "owasp", "siem", "soc", "threat"] },
+      { d: "Cloud/DevOps", k: ["aws", "gcp", "azure", "docker", "kubernetes", "terraform"] },
+      { d: "UI/UX Design", k: ["ui", "ux", "figma", "prototype"] },
+      { d: "Product Management", k: ["product", "roadmap", "stakeholder", "analytics"] },
+    ];
+
+    const scored = catalog
+      .map((c) => ({
+        domain: c.d,
+        score: c.k.reduce((s, kw) => (text.includes(kw) ? s + 1 : s), 0),
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    return scored.filter((s) => s.score > 0).map((s) => s.domain);
+  }
+
+  const previewDomains = useMemo(getPreviewSuggestions, [form]);
+
   function addToken(field: "skills" | "interests", token: string) {
     const current = String((form as any)[field] ?? "");
     const parts = current

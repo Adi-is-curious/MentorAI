@@ -184,16 +184,49 @@ export default function Assessment() {
       .toLowerCase();
 
     const catalog = [
-      { d: "Data Science", k: ["python", "pandas", "statistics", "ml", "data", "sql"] },
-      { d: "AI/ML Engineering", k: ["ml", "ai", "pytorch", "tensorflow", "llm"] },
-      { d: "Frontend Engineering", k: ["react", "javascript", "typescript", "css", "ui", "design", "tailwind", "next"] },
-      { d: "Backend Engineering", k: ["node", "express", "api", "postgres", "sql", "prisma"] },
-      { d: "Full Stack Engineering", k: ["fullstack", "full stack", "react", "node", "sql"] },
-      { d: "Mobile Development", k: ["ios", "android", "swift", "kotlin", "flutter", "react native"] },
+      {
+        d: "Data Science",
+        k: ["python", "pandas", "statistics", "ml", "data", "sql"],
+      },
+      {
+        d: "AI/ML Engineering",
+        k: ["ml", "ai", "pytorch", "tensorflow", "llm"],
+      },
+      {
+        d: "Frontend Engineering",
+        k: [
+          "react",
+          "javascript",
+          "typescript",
+          "css",
+          "ui",
+          "design",
+          "tailwind",
+          "next",
+        ],
+      },
+      {
+        d: "Backend Engineering",
+        k: ["node", "express", "api", "postgres", "sql", "prisma"],
+      },
+      {
+        d: "Full Stack Engineering",
+        k: ["fullstack", "full stack", "react", "node", "sql"],
+      },
+      {
+        d: "Mobile Development",
+        k: ["ios", "android", "swift", "kotlin", "flutter", "react native"],
+      },
       { d: "Cybersecurity", k: ["security", "owasp", "siem", "soc", "threat"] },
-      { d: "Cloud/DevOps", k: ["aws", "gcp", "azure", "docker", "kubernetes", "terraform"] },
+      {
+        d: "Cloud/DevOps",
+        k: ["aws", "gcp", "azure", "docker", "kubernetes", "terraform"],
+      },
       { d: "UI/UX Design", k: ["ui", "ux", "figma", "prototype"] },
-      { d: "Product Management", k: ["product", "roadmap", "stakeholder", "analytics"] },
+      {
+        d: "Product Management",
+        k: ["product", "roadmap", "stakeholder", "analytics"],
+      },
     ];
 
     const scored = catalog
@@ -1186,11 +1219,15 @@ export default function Assessment() {
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">Live Preview</CardTitle>
-              <CardDescription>Real‑time insights based on your inputs</CardDescription>
+              <CardDescription>
+                Real‑time insights based on your inputs
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="rounded-md border p-3 text-sm">
-                <div className="mb-1 font-medium">Hello{form.rolePref ? ` ${form.rolePref} explorer` : ""}!</div>
+                <div className="mb-1 font-medium">
+                  Hello{form.rolePref ? ` ${form.rolePref} explorer` : ""}!
+                </div>
                 <div className="text-muted-foreground">
                   {form.experience === "student"
                     ? "We’ll emphasize foundational skills and beginner‑friendly resources."
@@ -1202,9 +1239,14 @@ export default function Assessment() {
                 </div>
               </div>
               <div>
-                <div className="mb-2 text-sm text-muted-foreground">Likely matches</div>
+                <div className="mb-2 text-sm text-muted-foreground">
+                  Likely matches
+                </div>
                 <ul className="space-y-1 text-sm">
-                  {(previewDomains.length ? previewDomains : ["— add a few skills/interests to see suggestions —"]).map((d) => (
+                  {(previewDomains.length
+                    ? previewDomains
+                    : ["— add a few skills/interests to see suggestions —"]
+                  ).map((d) => (
                     <li key={d} className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-primary" />
                       <span>{d}</span>
@@ -1212,7 +1254,10 @@ export default function Assessment() {
                   ))}
                 </ul>
               </div>
-              <div className="text-xs text-muted-foreground">Tip: add skills (e.g., react, python, sql) or select tools/industries to refine.</div>
+              <div className="text-xs text-muted-foreground">
+                Tip: add skills (e.g., react, python, sql) or select
+                tools/industries to refine.
+              </div>
             </CardContent>
           </Card>
 

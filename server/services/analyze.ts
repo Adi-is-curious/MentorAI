@@ -224,7 +224,9 @@ export function analyzeCareer(input: unknown): AnalyzeResponse {
       if (r.includes("architect") && c.domain.includes("Architect")) score += 2;
       if (r.includes("technical writer") && c.domain.includes("Technical Writing")) score += 2;
     }
-    for (const ind of industries) if (text.includes(ind.toLowerCase()))) score += 0.5;
+    for (const ind of industries) {
+      if (text.includes(ind.toLowerCase())) score += 0.5;
+    }
     if (learningStyle) score += 0.1;
     if (environment) score += 0.1;
     return { domain: c.domain, score, matched, baseReason: c.baseReason };

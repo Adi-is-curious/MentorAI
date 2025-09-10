@@ -4,7 +4,10 @@ import { analyzeCareer } from "../../server/services/analyze";
 export const handler: Handler = async (event) => {
   try {
     if (event.httpMethod !== "POST") {
-      return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+      return {
+        statusCode: 405,
+        body: JSON.stringify({ error: "Method Not Allowed" }),
+      };
     }
     const body = event.body ? JSON.parse(event.body) : {};
     const result = analyzeCareer(body);

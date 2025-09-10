@@ -5,7 +5,10 @@ import { saveQuiz } from "../../server/db";
 export const handler: Handler = async (event) => {
   try {
     if (event.httpMethod !== "POST") {
-      return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+      return {
+        statusCode: 405,
+        body: JSON.stringify({ error: "Method Not Allowed" }),
+      };
     }
     const body = event.body ? JSON.parse(event.body) : {};
     // Sanitize input using the same schema (fields optional/defaulted)
@@ -20,7 +23,10 @@ export const handler: Handler = async (event) => {
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: false, error: e?.message || "Failed to save" }),
+      body: JSON.stringify({
+        ok: false,
+        error: e?.message || "Failed to save",
+      }),
     };
   }
 };

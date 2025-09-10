@@ -638,7 +638,8 @@ export default function Assessment() {
                 <div className="space-y-2">
                   <Label>Target roles</Label>
                   <p className="text-xs text-muted-foreground">
-                    Not sure? Search and pick 1–3 roles. We’ll explain them and find your fit.
+                    Not sure? Search and pick 1–3 roles. We’ll explain them and
+                    find your fit.
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     <Input
@@ -994,7 +995,10 @@ export default function Assessment() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <p className="text-xs text-muted-foreground">Add anything you’ve used in classes or projects — languages, tools, frameworks.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Add anything you’ve used in classes or projects — languages,
+                    tools, frameworks.
+                  </p>
                   <Input
                     id="skills"
                     aria-describedby="help-skills"
@@ -1041,7 +1045,10 @@ export default function Assessment() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <p className="text-xs text-muted-foreground">Write what excites you — solving puzzles, designing UI, working with data, automating tasks.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Write what excites you — solving puzzles, designing UI,
+                    working with data, automating tasks.
+                  </p>
                   <Input
                     id="interests"
                     aria-describedby="help-interests"

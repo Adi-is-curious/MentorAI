@@ -169,6 +169,29 @@ export default function Assessment() {
     "Google Data Analytics",
   ];
 
+  const ROLE_OPTIONS = [
+    "Software Engineer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Mobile App Developer",
+    "DevOps Engineer",
+    "Cloud Engineer",
+    "Cybersecurity Analyst",
+    "Site Reliability Engineer",
+    "AI/ML Engineer",
+    "Data Scientist",
+    "Data Engineer",
+    "UI/UX Designer",
+    "Product Manager",
+    "QA/Test Engineer",
+    "Game Developer",
+    "Embedded Systems Engineer",
+    "Systems Architect",
+    "Technical Writer",
+    "Database Administrator",
+  ];
+
   function getPreviewSuggestions() {
     const text = [
       form.skills,
@@ -272,6 +295,14 @@ export default function Assessment() {
   }
 
   const progress = useMemo(() => (loading ? 66 : 0), [loading]);
+  const [roleQuery, setRoleQuery] = useState("");
+  const filteredRoles = useMemo(
+    () =>
+      ROLE_OPTIONS.filter((r) =>
+        r.toLowerCase().includes(roleQuery.toLowerCase()),
+      ),
+    [roleQuery],
+  );
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -606,29 +637,18 @@ export default function Assessment() {
                 {/* Target roles */}
                 <div className="space-y-2">
                   <Label>Target roles</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      "Software Engineer",
-                      "Frontend Developer",
-                      "Backend Developer",
-                      "Full Stack Developer",
-                      "Mobile App Developer",
-                      "DevOps Engineer",
-                      "Cloud Engineer",
-                      "Cybersecurity Analyst",
-                      "Site Reliability Engineer",
-                      "AI/ML Engineer",
-                      "Data Scientist",
-                      "Data Engineer",
-                      "UI/UX Designer",
-                      "Product Manager",
-                      "QA/Test Engineer",
-                      "Game Developer",
-                      "Embedded Systems Engineer",
-                      "Systems Architect",
-                      "Technical Writer",
-                      "Database Administrator",
-                    ].map((role) => (
+                  <p className="text-xs text-muted-foreground">
+                    Not sure? Search and pick 1–3 roles. We’ll explain them and find your fit.
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <Input
+                      placeholder="Search roles (e.g., frontend, data, security)"
+                      value={roleQuery}
+                      onChange={(e) => setRoleQuery(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {filteredRoles.map((role) => (
                       <label
                         key={role}
                         className="flex items-center gap-2 rounded-md border p-2 text-sm hover:bg-accent"

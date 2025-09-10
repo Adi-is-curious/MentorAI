@@ -1,7 +1,7 @@
 import type { AnalyzeResponse } from "@shared/api";
 import { z } from "zod";
 
-const AnalyzeInput = z.object({
+export const analyzeInputSchema = z.object({
   skills: z.string().default(""),
   interests: z.string().default(""),
   resumeText: z.string().default(""),

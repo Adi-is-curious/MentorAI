@@ -117,7 +117,9 @@ export default function Suggestions() {
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/40 border-t-primary" />
-                <span className="text-sm text-muted-foreground">Analyzing your inputs…</span>
+                <span className="text-sm text-muted-foreground">
+                  Analyzing your inputs…
+                </span>
               </div>
               <Skeleton className="h-3 w-full" />
               <Skeleton className="h-3 w-11/12" />
@@ -168,7 +170,9 @@ export default function Suggestions() {
             <Card>
               <CardHeader>
                 <CardTitle>Explore roadmaps & resources</CardTitle>
-                <CardDescription>Select any suggested path below.</CardDescription>
+                <CardDescription>
+                  Select any suggested path below.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {allSuggested.length ? (
@@ -187,7 +191,9 @@ export default function Suggestions() {
                         </SelectContent>
                       </Select>
                       <div>
-                        <div className="text-sm text-muted-foreground">Suggestions</div>
+                        <div className="text-sm text-muted-foreground">
+                          Suggestions
+                        </div>
                         <ul className="mt-1 space-y-1 text-sm">
                           {data?.suggestions?.map((s) => (
                             <li key={s.domain}>
@@ -207,7 +213,9 @@ export default function Suggestions() {
                       <>
                         <RoadmapGame domain={selected} items={items} />
                         <div>
-                          <div className="mt-4 text-sm font-medium">Resources</div>
+                          <div className="mt-4 text-sm font-medium">
+                            Resources
+                          </div>
                           <ul className="mt-2 grid gap-2 sm:grid-cols-2">
                             {items.map((r) => (
                               <li key={r.url}>

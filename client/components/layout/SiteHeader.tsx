@@ -10,7 +10,9 @@ const navItems = [
   { to: "/suggestions", label: "Suggestions" },
   { to: "/resume-analyzer", label: "Analyzer" },
   { to: "/resources", label: "Resources" },
+  { to: "/community", label: "Community" },
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/profile", label: "Profile" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];

@@ -4,6 +4,24 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleAnalyze } from "./routes/ai";
 import { handleGetLatestQuiz, handleSaveQuiz } from "./routes/quiz";
+import {
+  handleUpsertProfile,
+  handleGetProfile,
+  handleCreatePost,
+  handleFeed,
+  handleToggleLike,
+  handleComments,
+  handleCreateComment,
+  handleHelpList,
+  handleHelpCreate,
+  handleHelpReply,
+  handleRooms,
+  handleCreateRoom,
+  handleMessages,
+  handleCreateMessage,
+  handleLeaderboard,
+  handleReport,
+} from "./routes/community";
 
 export function createServer() {
   const app = express();

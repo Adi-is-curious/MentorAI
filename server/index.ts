@@ -42,6 +42,28 @@ export function createServer() {
   // Quiz persistence endpoints
   app.post("/api/quiz", handleSaveQuiz);
   app.get("/api/quiz/latest", handleGetLatestQuiz);
+  // Community API
+  app.post("/api/community/profile", handleUpsertProfile);
+  app.get("/api/community/profile/:id", handleGetProfile);
+
+  app.get("/api/community/feed", handleFeed);
+  app.post("/api/community/posts", handleCreatePost);
+  app.post("/api/community/posts/:id/like", handleToggleLike);
+  app.get("/api/community/posts/:id/comments", handleComments);
+  app.post("/api/community/posts/:id/comments", handleCreateComment);
+
+  app.get("/api/community/help-requests", handleHelpList);
+  app.post("/api/community/help-requests", handleHelpCreate);
+  app.post("/api/community/help-requests/:id/replies", handleHelpReply);
+
+  app.get("/api/community/rooms", handleRooms);
+  app.post("/api/community/rooms", handleCreateRoom);
+  app.get("/api/community/rooms/:id/messages", handleMessages);
+  app.post("/api/community/rooms/:id/messages", handleCreateMessage);
+
+  app.get("/api/community/leaderboard", handleLeaderboard);
+  app.post("/api/community/report", handleReport);
+
   // Also support Netlify function base path (after basePath strip the route becomes /ai/analyze)
   app.post("/ai/analyze", handleAnalyze);
   app.post("/quiz", handleSaveQuiz);

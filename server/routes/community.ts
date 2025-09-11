@@ -13,22 +13,23 @@ export async function handleUpsertProfile(req: Request, res: Response) {
   try {
     await ensureCommunitySchema();
     const p = getPool();
-    const {
-      userId,
-      name,
-      role,
-      bio,
-      skills,
-      goals,
-      avatarUrl,
-    } = req.body || {};
+    const { userId, name, role, bio, skills, goals, avatarUrl } =
+      req.body || {};
     if (!userId) return res.status(400).json({ error: "userId required" });
     await p.query(
       `INSERT INTO profiles(user_id, name, role, bio, skills, goals, avatar_url)
        VALUES ($1,$2,$3,$4,$5,$6,$7)
        ON CONFLICT (user_id)
        DO UPDATE SET name=EXCLUDED.name, role=EXCLUDED.role, bio=EXCLUDED.bio, skills=EXCLUDED.skills, goals=EXCLUDED.goals, avatar_url=EXCLUDED.avatar_url`,
-      [userId, name ?? null, role ?? null, bio ?? null, skills ?? null, goals ?? null, avatarUrl ?? null],
+      [
+        userId,
+        name ?? null,
+        role ?? null,
+        bio ?? null,
+        skills ?? null,
+        goals ?? null,
+        avatarUrl ?? null,
+      ],
     );
     const r = await p.query(
       `SELECT user_id as "userId", name, role, bio, skills, goals, avatar_url as "avatarUrl", created_at as "createdAt" FROM profiles WHERE user_id=$1`,
@@ -66,7 +67,13 @@ export async function handleCreatePost(req: Request, res: Response) {
     const r = await p.query(
       `INSERT INTO posts(author_id, content, image_url, link_url, visibility)
        VALUES ($1,$2,$3,$4,$5) RETURNING id`,
-      [userId, content, imageUrl ?? null, linkUrl ?? null, visibility ?? "public"],
+      [
+        userId,
+        content,
+        imageUrl ?? null,
+        linkUrl ?? null,
+        visibility ?? "public",
+      ],
     );
     res.json({ id: r.rows[0].id });
   } catch (e) {
@@ -115,7 +122,10 @@ export async function handleFeed(req: Request, res: Response) {
             avatarUrl: row["author.avatarUrl"],
           }
         : null;
-      delete row["author.userId"]; delete row["author.name"]; delete row["author.role"]; delete row["author.avatarUrl"]; 
+      delete row["author.userId"];
+      delete row["author.name"];
+      delete row["author.role"];
+      delete row["author.avatarUrl"];
       return { ...row, author };
     });
     res.json({ posts: rows });
@@ -137,10 +147,16 @@ export async function handleToggleLike(req: Request, res: Response) {
       [id, userId],
     );
     if (ex.rowCount) {
-      await p.query(`DELETE FROM post_likes WHERE post_id=$1 AND user_id=$2`, [id, userId]);
+      await p.query(`DELETE FROM post_likes WHERE post_id=$1 AND user_id=$2`, [
+        id,
+        userId,
+      ]);
       return res.json({ liked: false });
     } else {
-      await p.query(`INSERT INTO post_likes(post_id, user_id) VALUES ($1,$2)`, [id, userId]);
+      await p.query(`INSERT INTO post_likes(post_id, user_id) VALUES ($1,$2)`, [
+        id,
+        userId,
+      ]);
       return res.json({ liked: true });
     }
   } catch (e) {
@@ -172,7 +188,10 @@ export async function handleComments(req: Request, res: Response) {
             avatarUrl: row["author.avatarUrl"],
           }
         : null;
-      delete row["author.userId"]; delete row["author.name"]; delete row["author.role"]; delete row["author.avatarUrl"]; 
+      delete row["author.userId"];
+      delete row["author.name"];
+      delete row["author.role"];
+      delete row["author.avatarUrl"];
       return { ...row, author };
     });
     res.json({ comments: rows });
@@ -219,7 +238,8 @@ export async function handleHelpCreate(req: Request, res: Response) {
     const p = getPool();
     const userId = getUserId(req);
     const { title, body, tags } = req.body || {};
-    if (!title || !body) return res.status(400).json({ error: "title and body required" });
+    if (!title || !body)
+      return res.status(400).json({ error: "title and body required" });
     const r = await p.query(
       `INSERT INTO help_requests(author_id, title, body, tags) VALUES ($1,$2,$3,$4) RETURNING id`,
       [userId, title, body, tags ?? null],
@@ -361,7 +381,8 @@ export async function handleReport(req: Request, res: Response) {
     await ensureCommunitySchema();
     const p = getPool();
     const { type, refId, reason } = req.body || {};
-    if (!type || !refId) return res.status(400).json({ error: "type and refId required" });
+    if (!type || !refId)
+      return res.status(400).json({ error: "type and refId required" });
     await p.query(
       `INSERT INTO reports(type, ref_id, reason) VALUES ($1,$2,$3)`,
       [type, refId, reason ?? null],

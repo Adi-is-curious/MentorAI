@@ -17,6 +17,8 @@ import Resources from "./pages/Resources";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import Quiz from "./pages/Quiz";
+import Community from "./pages/Community";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +37,8 @@ const App = () => (
             <Route path="/suggestions" element={<Suggestions />} />
             <Route path="/resume-analyzer" element={<Analyzer />} />
             <Route path="/resources" element={<Resources />} />
-            <Route path="/profile" element={<Placeholder />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Placeholder />} />
             <Route path="/faq" element={<Placeholder />} />

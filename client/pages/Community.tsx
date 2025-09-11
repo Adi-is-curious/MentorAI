@@ -74,7 +74,7 @@ function LikeButton({ postId, count }: { postId: number; count: number }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["feed"] }),
   });
   return (
-    <Button size="sm" variant="outline" onClick={() => m.mutate()} aria-label="Like post">❤��� {count}</Button>
+    <Button size="sm" variant="outline" onClick={() => m.mutate()} aria-label="Like post">❤️ {count}</Button>
   );
 }
 
@@ -136,6 +136,7 @@ function Feed() {
             ) : null}
             <div className="mt-3 flex items-center gap-2">
               <LikeButton postId={p.id} count={p.likeCount} />
+              <Button size="sm" variant="ghost" onClick={() => fetch("/api/community/report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "post", refId: String(p.id), reason: "inappropriate" }) })}>Report</Button>
             </div>
             <Comments postId={p.id} />
           </div>

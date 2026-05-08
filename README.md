@@ -4,44 +4,56 @@
 
 ---
 
-## Architecture Overview
+## Architecture & Infrastructure
 
-MentorAI utilizes a modern decoupled microservices architecture optimized for rapid iteration and AI integration:
+MentorAI utilizes a modern decoupled microservices architecture:
 
-```mermaid
-flowchart TD
-    subgraph Frontend
-        React[React / Vite SPA]
-        Tailwind[TailwindCSS + Radix UI]
-    end
+- **Frontend**: React 18 SPA (Vite) + TailwindCSS + Radix UI.
+- **Backend Core**: Express.js with **BullMQ** for async job processing.
+- **AI Backend**: Python 3.11 FastAPI service for embeddings (`all-MiniLM-L6-v2`) and resume parsing.
+- **Database**: PostgreSQL with **pgvector** for semantic ranking and Drizzle ORM.
 
-    subgraph Backend
-        Express[Node.js / Express]
-        Drizzle[Drizzle ORM]
-    end
+---
 
-    subgraph AI Service
-        FastAPI[Python / FastAPI]
-        Groq[Groq API / Llama 3]
-        NLP[spaCy / sentence-transformers]
-    end
+## Completed Phases (v1.0 Ready)
 
-    subgraph Database
-        Postgres[(PostgreSQL)]
-    end
+### ✅ Phase 7: Semantic Intelligence & pgvector
+- **Vector Search**: Integrated `pgvector` for 384-dim semantic embeddings.
+- **Semantic Ranking**: Roadmap resources are now ranked using cosine distance + quality scores.
+- **Learning Style Tracking**: Monitoring format preferences and session length to detect burnout.
 
-    React -->|REST API| Express
-    Express -->|Proxy AI Calls| FastAPI
-    FastAPI -->|Generate Quizzes| Groq
-    Express -->|CRUD| Drizzle
-    Drizzle --> Postgres
+### ✅ Phase 8: Async Workers & BullMQ
+- **Background Jobs**: Offloaded heavy NLP and analytics tasks to BullMQ.
+- **Resilient Infrastructure**: Lazy-loading Redis connections to ensure the server remains stable even if infrastructure is offline.
+- **Health Monitoring**: Real-time queue health dashboard.
+
+---
+
+## Quick Start
+
+### 1. Environment Setup
+Copy `.env.example` to `.env` and fill in:
+- `DATABASE_URL`: Your PostgreSQL connection string.
+- `REDIS_URL`: (Optional) Redis URI to enable background workers.
+- `GROQ_API_KEY`: Required for AI Quiz generation.
+
+### 2. Start Python AI Service
+```bash
+cd python_service
+pip install -r requirements.txt
+python main.py
 ```
 
-### Stack Details
-- **Frontend**: React 18, React Router 6 (SPA), TailwindCSS 3, TypeScript.
-- **Backend Core**: Express.js proxying requests and serving Drizzle ORM models.
-- **AI Backend**: Python 3.11 FastAPI service handling text-embeddings, resume parsing (`pdfplumber`), and LLM calls via the `groq` SDK.
-- **Database**: PostgreSQL with standard relational schema (`users`, `topic_mastery`, `review_schedule`).
+### 3. Initialize Database
+```bash
+pnpm drizzle-kit push
+pnpm tsx server/seed_resources.ts
+```
+
+### 4. Start Development Server
+```bash
+pnpm dev
+```
 
 ---
 
@@ -81,11 +93,3 @@ MentorAI continuously watches for burnout and pacing tolerance via `server/route
 - **Drop-off Detection**: Identifies topics where you score poorly and skip subsequent tasks.
 - **Dynamic Weekly Reviews**: Algorithmically generates a personalized paragraph offering encouragement and suggesting pacing adjustments.
 - **Mentor Memory**: Stores contextual profile insights in `mentor_memory` for the AI to retain conversational consistency across sessions.
-
----
-
-## Future Roadmap (Phase 7 & 8)
-
-- **Vector Search (`pgvector`)**: Converting resources, weak areas, and user resumes into semantic embeddings to natively query the closest learning resources using Drizzle.
-- **Learning Style Detection**: Tracking the ratio of videos vs. articles consumed to automatically filter the roadmap.
-- **Async Workers**: Moving AI generation and embedding calculations to Redis/BullMQ to prevent blocking Express endpoints.

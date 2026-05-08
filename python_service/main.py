@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from pydantic import BaseModel
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
-from nlp_engine import process_resume, get_embedding
+import nlp_engine
 from quiz_engine import generate_quiz
 
 app = FastAPI(title="MentorAI NLP Service")
@@ -32,7 +32,7 @@ async def api_generate_quiz(request: QuizRequest):
 
 @app.post("/generate-embedding")
 async def api_generate_embedding(request: EmbedRequest):
-    embedding = get_embedding(request.text)
+    embedding = nlp_engine.get_embedding(request.text)
     return {"embedding": embedding}
 
 @app.post("/analyze-resume")

@@ -1,6 +1,5 @@
 import { RequestHandler } from "express";
 import multer from "multer";
-import FormData from "form-data";
 import { db } from "../db";
 import { users, resumeAnalysis } from "../schema";
 import { eq } from "drizzle-orm";
@@ -25,8 +24,10 @@ export const handleResumeAnalysis: RequestHandler = async (req, res) => {
       console.warn("[Resume] DB offline, skipping user lookup.");
     }
 
+    // Use native Web API FormData and Blob (supported in Node 18+)
     const formData = new FormData();
-    formData.append("file", req.file.buffer, req.file.originalname);
+    const blob = new Blob([req.file.buffer], { type: req.file.mimetype });
+    formData.append("file", blob, req.file.originalname);
     
     if (req.body.job_description) {
       formData.append("job_description", req.body.job_description);
@@ -35,8 +36,7 @@ export const handleResumeAnalysis: RequestHandler = async (req, res) => {
     // Call Python FastAPI service
     const pyRes = await fetch("http://localhost:8000/analyze-resume", {
       method: "POST",
-      body: formData as any, // form-data is compatible enough with node-fetch
-      headers: formData.getHeaders(),
+      body: formData, // Native fetch understands native FormData automatically
     });
 
     if (!pyRes.ok) {

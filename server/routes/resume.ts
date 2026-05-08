@@ -16,9 +16,14 @@ export const handleResumeAnalysis: RequestHandler = async (req, res) => {
     }
 
     const sessionId = (req as any).sessionId;
-    const user = await db.query.users.findFirst({
-      where: eq(users.sessionId, sessionId),
-    });
+    let user = null;
+    try {
+      user = await db.query.users.findFirst({
+        where: eq(users.sessionId, sessionId),
+      });
+    } catch (e) {
+      console.warn("[Resume] DB offline, skipping user lookup.");
+    }
 
     const formData = new FormData();
     formData.append("file", req.file.buffer, req.file.originalname);
@@ -42,10 +47,14 @@ export const handleResumeAnalysis: RequestHandler = async (req, res) => {
     const pyData = await pyRes.json();
 
     if (user) {
-      await db.insert(resumeAnalysis).values({
-        userId: user.id,
-        results: pyData,
-      });
+      try {
+        await db.insert(resumeAnalysis).values({
+          userId: user.id,
+          results: pyData,
+        });
+      } catch(e) {
+        console.warn("[Resume] DB offline, skipping save to DB.");
+      }
     }
 
     res.json({ ok: true, data: pyData });

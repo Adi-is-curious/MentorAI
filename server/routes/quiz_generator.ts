@@ -35,12 +35,18 @@ export const handleGenerateQuiz: RequestHandler = async (req, res) => {
 
     const quizData = await pyResponse.json();
 
-    // Save quiz to DB
-    const [newQuiz] = await db.insert(quizzes).values({
-      topic,
-      difficulty,
-      questionsJson: quizData,
-    }).returning();
+    // Try to save to DB, but don't fail if DB is offline
+    let newQuiz = { id: Date.now(), topic, difficulty, questionsJson: quizData };
+    try {
+      const [savedQuiz] = await db.insert(quizzes).values({
+        topic,
+        difficulty,
+        questionsJson: quizData,
+      }).returning();
+      newQuiz = savedQuiz as any;
+    } catch (e: any) {
+      console.warn("[Quiz Generator] DB offline, returning quiz without saving to DB.", e?.message);
+    }
 
     res.json({ ok: true, quiz: newQuiz });
   } catch (e: any) {

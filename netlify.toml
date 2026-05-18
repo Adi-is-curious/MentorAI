@@ -3,18 +3,21 @@
   functions = "netlify/functions"
   publish = "dist/spa"
 
-
 [functions]
-  external_node_modules = ["express", "pg"]
   node_bundler = "esbuild"
+  # Include modules that esbuild can't bundle natively
+  external_node_modules = ["express", "pg", "postgres", "bullmq", "ioredis"]
+  # 30s timeout for AI calls
+  [functions."api"]
+    timeout = 30
 
+# All /api/* routes go to the single Express-based serverless function
 [[redirects]]
-  force = true
   from = "/api/*"
-  status = 200
   to = "/.netlify/functions/api/:splat"
+  status = 200
 
-# SPA fallback so client routes work on refresh
+# SPA fallback — must be LAST so client routes work on refresh
 [[redirects]]
   from = "/*"
   to = "/index.html"

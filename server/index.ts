@@ -40,89 +40,121 @@ export function createServer() {
     next();
   });
 
-  // Example API routes
-  app.get("/api/ping", (_req, res) => {
+  // ─── Route Registration ────────────────────────────────────────────────────
+  // Routes are registered under BOTH /api/* (for local dev via Vite proxy)
+  // AND /* stripped paths (for Netlify Functions where serverless-http strips
+  // the /.netlify/functions/api prefix, leaving just the :splat portion).
+  //
+  // Example: POST /api/resume/analyze (local) → POST /resume/analyze (Netlify)
+  // ───────────────────────────────────────────────────────────────────────────
+
+  // Ping
+  const handlePing = (_req: express.Request, res: express.Response) => {
     const ping = process.env.PING_MESSAGE ?? "ping";
     res.json({ message: ping });
-  });
+  };
+  app.get("/api/ping", handlePing);
+  app.get("/ping", handlePing);
 
+  // Demo
   app.get("/api/demo", handleDemo);
+  app.get("/demo", handleDemo);
+
+  // AI Analyze (onboarding skills analysis)
   app.post("/api/ai/analyze", handleAnalyze);
+  app.post("/ai/analyze", handleAnalyze);
+
   // Quiz persistence endpoints
   app.post("/api/quiz", handleSaveQuiz);
+  app.post("/quiz", handleSaveQuiz);
   app.get("/api/quiz/latest", handleGetLatestQuiz);
+  app.get("/quiz/latest", handleGetLatestQuiz);
   
   // Dashboard endpoints
-  app.get("/api/dashboard", async (req, res, next) => {
+  const dashboardHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleGetDashboardMetrics } = await import("./routes/dashboard");
     handleGetDashboardMetrics(req, res, next);
-  });
+  };
+  app.get("/api/dashboard", dashboardHandler);
+  app.get("/dashboard", dashboardHandler);
   
   // Evaluation endpoints
-  app.post("/api/evaluate", async (req, res, next) => {
+  const evaluationHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleQuizEvaluation } = await import("./routes/evaluation");
     handleQuizEvaluation(req, res, next);
-  });
+  };
+  app.post("/api/evaluate", evaluationHandler);
+  app.post("/evaluate", evaluationHandler);
   
   // Resume Analyzer
-  app.post("/api/resume/analyze", async (req, res, next) => {
+  const resumeHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleResumeUpload, handleResumeAnalysis } = await import("./routes/resume");
     handleResumeUpload(req, res, (err) => {
       if (err) return next(err);
       handleResumeAnalysis(req, res, next);
     });
-  });
+  };
+  app.post("/api/resume/analyze", resumeHandler);
+  app.post("/resume/analyze", resumeHandler);
 
   // Memory & Analytics endpoints
-  app.get("/api/memory", async (req, res, next) => {
+  const getMemoryHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleGetMemory } = await import("./routes/memory");
     handleGetMemory(req, res, next);
-  });
-  app.post("/api/memory", async (req, res, next) => {
+  };
+  const addMemoryHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleAddMemory } = await import("./routes/memory");
     handleAddMemory(req, res, next);
-  });
-  app.get("/api/analytics", async (req, res, next) => {
+  };
+  app.get("/api/memory", getMemoryHandler);
+  app.get("/memory", getMemoryHandler);
+  app.post("/api/memory", addMemoryHandler);
+  app.post("/memory", addMemoryHandler);
+
+  const analyticsHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleGetAnalytics } = await import("./routes/analytics");
     handleGetAnalytics(req, res, next);
-  });
+  };
+  app.get("/api/analytics", analyticsHandler);
+  app.get("/analytics", analyticsHandler);
 
   // Roadmap endpoint
-  app.get("/api/roadmap", async (req, res, next) => {
+  const roadmapHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleGetRoadmap } = await import("./routes/roadmap");
     handleGetRoadmap(req, res, next);
-  });
+  };
+  app.get("/api/roadmap", roadmapHandler);
+  app.get("/roadmap", roadmapHandler);
 
   // Quiz Generation endpoint
-  app.get("/api/quiz/generate", async (req, res, next) => {
+  const quizGenerateHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleGenerateQuiz } = await import("./routes/quiz_generator");
     handleGenerateQuiz(req, res, next);
-  });
+  };
+  app.get("/api/quiz/generate", quizGenerateHandler);
+  app.get("/quiz/generate", quizGenerateHandler);
 
   // Learning Style endpoints
-  app.get("/api/learning-style", async (req, res, next) => {
+  const getLearningStyleHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleGetLearningStyle } = await import("./routes/learning_style");
     handleGetLearningStyle(req, res, next);
-  });
-  app.post("/api/learning-style", async (req, res, next) => {
+  };
+  const updateLearningStyleHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleUpdateLearningStyle } = await import("./routes/learning_style");
     handleUpdateLearningStyle(req, res, next);
-  });
+  };
+  app.get("/api/learning-style", getLearningStyleHandler);
+  app.get("/learning-style", getLearningStyleHandler);
+  app.post("/api/learning-style", updateLearningStyleHandler);
+  app.post("/learning-style", updateLearningStyleHandler);
 
   // Queue health / status
-  app.get("/api/queue/status", async (req, res, next) => {
+  const queueStatusHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const { handleQueueStatus } = await import("./routes/queue_status");
     handleQueueStatus(req, res, next);
-  });
-
-  // Also support Netlify function base path (after basePath strip the route becomes /ai/analyze)
-  app.post("/ai/analyze", handleAnalyze);
-  app.post("/quiz", handleSaveQuiz);
-  app.get("/quiz/latest", handleGetLatestQuiz);
-  app.get("/dashboard", async (req, res, next) => {
-    const { handleGetDashboardMetrics } = await import("./routes/dashboard");
-    handleGetDashboardMetrics(req, res, next);
-  });
+  };
+  app.get("/api/queue/status", queueStatusHandler);
+  app.get("/queue/status", queueStatusHandler);
 
   return app;
 }

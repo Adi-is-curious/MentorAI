@@ -4,6 +4,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleAnalyze } from "./routes/ai";
 import { handleGetLatestQuiz, handleSaveQuiz } from "./routes/quiz";
+import { handleResumeUpload, handleResumeAnalysis } from "./routes/resume";
 
 // Boot async workers only when Redis is configured
 // Workers are run as a separate process in production (e.g. `tsx server/queue/workers.ts`)
@@ -88,8 +89,7 @@ export function createServer() {
   
   // Resume Analyzer
   const resumeHandler = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const { handleResumeUpload, handleResumeAnalysis } = await import("./routes/resume");
-    handleResumeUpload(req, res, (err) => {
+    handleResumeUpload(req, res, (err: any) => {
       if (err) return next(err);
       handleResumeAnalysis(req, res, next);
     });

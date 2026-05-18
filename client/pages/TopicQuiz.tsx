@@ -30,9 +30,21 @@ export default function TopicQuiz() {
     fetch(`/api/quiz/generate?topic=${encodeURIComponent(topic)}`, {
       headers: { "x-session-id": "demo_session" },
     })
-      .then((r) => r.json())
-      .then((j) => {
+      .then(async (r) => {
+        const text = await r.text();
+        let j;
+        try {
+          j = JSON.parse(text);
+        } catch (e) {
+          console.error("Non-JSON response from quiz endpoint:", text);
+          throw new Error("Server returned invalid response");
+        }
         if (j.ok) setQuizData(j.quiz.questionsJson);
+        else throw new Error(j.error || "Quiz generation failed");
+      })
+      .catch((e) => {
+        console.error("Quiz fetch error:", e);
+        // handle visually if desired
       })
       .finally(() => setLoading(false));
   }, [topic]);

@@ -33,7 +33,15 @@ export default function Analyzer() {
         headers: { "x-session-id": "demo_session" },
       });
 
-      const json = await res.json();
+      const text = await res.text();
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (parseError) {
+        console.error("Non-JSON response from server:", text);
+        throw new Error(`Server returned invalid response: ${res.status}`);
+      }
+
       if (!res.ok || !json.ok) throw new Error(json.error || "Analysis failed");
       setData(json.data);
     } catch (e: any) {

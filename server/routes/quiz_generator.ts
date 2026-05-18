@@ -30,74 +30,50 @@ export const handleGenerateQuiz: RequestHandler = async (req, res) => {
       console.warn("[Quiz Generator] DB offline, using default difficulty.");
     }
 
-    // Call Groq API
     let quizData;
-    try {
-      const Groq = (await import("groq-sdk")).default;
-      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-      const prompt = `
-      You are an expert technical interviewer and computer science professor.
-      Generate a ${difficulty} level quiz about '${topic}'.
-      
-      The quiz must strictly be in valid JSON format matching this schema:
-      {
-          "topic": "${topic}",
-          "difficulty": "${difficulty}",
-          "questions": [
-              {
-                  "type": "mcq",
-                  "question": "string",
-                  "options": ["string", "string", "string", "string"],
-                  "correct_index": number (0-3),
-                  "explanation": "string explaining why"
-              },
-              {
-                  "type": "conceptual",
-                  "question": "string",
-                  "rubric": "string mentioning keywords to look for in the user's answer"
-              }
-          ]
-      }
-      
-      Include 2 MCQ questions and 1 conceptual question. Make the questions challenging but fair for a ${difficulty} level.
-      Only return the JSON.
-      `;
+    console.log("[Quiz] ENV GROQ_API_KEY present:", !!process.env.GROQ_API_KEY);
+    console.log("[Quiz] Model:", "llama-3.3-70b-versatile");
 
-      const chatCompletion = await groq.chat.completions.create({
-        messages: [{ role: "user", content: prompt }],
-        model: "llama3-70b-8192",
-        temperature: 0.3,
-        response_format: { type: "json_object" }
-      });
-
-      const responseText = chatCompletion.choices[0]?.message?.content || "{}";
-      quizData = JSON.parse(responseText);
-    } catch (e: any) {
-      console.warn("[Quiz Generator] Groq AI service offline or failed, returning fallback quiz data.", e.message);
-      quizData = {
-        topic: topic,
-        difficulty: difficulty,
-        questions: [
+    const Groq = (await import("groq-sdk")).default;
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const prompt = `
+    You are an expert technical interviewer and computer science professor.
+    Generate a ${difficulty} level quiz about '${topic}'.
+    
+    The quiz must strictly be in valid JSON format matching this schema:
+    {
+        "topic": "${topic}",
+        "difficulty": "${difficulty}",
+        "questions": [
             {
-                type: "mcq",
-                question: `What is the primary purpose of ${topic}?`,
-                options: [
-                    "To optimize backend database queries.",
-                    "To structure learning correctly.",
-                    `A fundamental concept in ${topic}.`,
-                    "A deprecated programming pattern."
-                ],
-                correct_index: 2,
-                explanation: `This is a placeholder explanation for ${topic} since the AI engine is offline.`
+                "type": "mcq",
+                "question": "string",
+                "options": ["string", "string", "string", "string"],
+                "correct_index": number (0-3),
+                "explanation": "string explaining why"
             },
             {
-                type: "conceptual",
-                question: `Explain how ${topic} improves system design.`,
-                rubric: "Look for keywords related to efficiency, scale, or logic."
+                "type": "conceptual",
+                "question": "string",
+                "rubric": "string mentioning keywords to look for in the user's answer"
             }
         ]
-      };
     }
+    
+    Include 2 MCQ questions and 1 conceptual question. Make the questions challenging but fair for a ${difficulty} level.
+    Only return the JSON.
+    `;
+
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.3,
+      response_format: { type: "json_object" }
+    });
+
+    const responseText = chatCompletion.choices[0]?.message?.content || "{}";
+    console.log("[Quiz] Raw Groq response:", responseText);
+    quizData = JSON.parse(responseText);
 
     // Try to save to DB, but don't fail if DB is offline
     let newQuiz = { id: Date.now(), topic, difficulty, questionsJson: quizData };

@@ -17,6 +17,11 @@ if (process.env.REDIS_URL) {
   console.info("[Server] REDIS_URL not set — async jobs disabled. Set REDIS_URL to enable.");
 }
 
+if (!process.env.GROQ_API_KEY) {
+  console.error("🚨 CRITICAL: Missing GROQ_API_KEY in environment variables. AI endpoints will fail.");
+  // On Netlify, this might just log. We won't throw here to avoid completely crashing the SPA server.
+}
+
 export function createServer() {
   const app = express();
 

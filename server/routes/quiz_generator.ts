@@ -27,13 +27,43 @@ export const handleGenerateQuiz: RequestHandler = async (req, res) => {
     }
 
     // Call Python Service
-    const pyResponse = await fetch("http://localhost:8000/generate-quiz", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topic, difficulty })
-    });
-
-    const quizData = await pyResponse.json();
+    let quizData;
+    try {
+      const pyResponse = await fetch("http://localhost:8000/generate-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic, difficulty })
+      });
+      if (!pyResponse.ok) {
+        throw new Error("Python service failed");
+      }
+      quizData = await pyResponse.json();
+    } catch (e: any) {
+      console.warn("[Quiz Generator] Python service offline, returning fallback quiz data.", e.message);
+      quizData = {
+        topic: topic,
+        difficulty: difficulty,
+        questions: [
+            {
+                type: "mcq",
+                question: `What is the primary purpose of ${topic}?`,
+                options: [
+                    "To optimize backend database queries.",
+                    "To structure learning correctly.",
+                    `A fundamental concept in ${topic}.`,
+                    "A deprecated programming pattern."
+                ],
+                correct_index: 2,
+                explanation: `This is a placeholder explanation for ${topic} since the AI engine is offline.`
+            },
+            {
+                type: "conceptual",
+                question: `Explain how ${topic} improves system design.`,
+                rubric: "Look for keywords related to efficiency, scale, or logic."
+            }
+        ]
+      };
+    }
 
     // Try to save to DB, but don't fail if DB is offline
     let newQuiz = { id: Date.now(), topic, difficulty, questionsJson: quizData };

@@ -8,14 +8,18 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 export const handleResumeUpload = upload.single("file");
 
-import { PDFParse as pdfParse } from "pdf-parse";
 import mammoth from "mammoth";
 import Groq from "groq-sdk";
 
 // Helper to extract text
 async function extractText(buffer: Buffer, mimetype: string, originalname: string): Promise<string> {
   if (mimetype === "application/pdf" || originalname.endsWith(".pdf")) {
-    const data = await (pdfParse as any)(buffer);
+    // pdf.js used internally by pdf-parse requires DOMMatrix in some environments
+    if (typeof global !== "undefined" && !(global as any).DOMMatrix) {
+      (global as any).DOMMatrix = class DOMMatrix { constructor() {} };
+    }
+    const { PDFParse } = await import("pdf-parse");
+    const data = await (PDFParse as any)(buffer);
     return data.text;
   } else if (
     mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||

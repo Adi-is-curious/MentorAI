@@ -5,9 +5,9 @@
 
 [functions]
   node_bundler = "esbuild"
-  # Include modules that esbuild can't bundle natively
-  external_node_modules = ["express", "pg", "postgres", "bullmq", "ioredis"]
-  # 30s timeout for AI calls
+  # Let esbuild bundle everything — don't exclude any modules.
+  # Express and other deps must be bundled into the function since
+  # Netlify Functions don't have a shared node_modules at runtime.
   [functions."api"]
     timeout = 30
 

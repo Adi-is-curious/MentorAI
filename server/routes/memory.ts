@@ -3,17 +3,22 @@ import { db } from "../db";
 import { users, mentorMemory } from "../schema";
 import { eq, and } from "drizzle-orm";
 
-async function getUserId(sessionId: string) {
-  const user = await db.query.users.findFirst({
-    where: eq(users.sessionId, sessionId),
-  });
-  return user?.id;
+async function getUserId(sessionId: string): Promise<number | null> {
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.sessionId, sessionId),
+    });
+    return user?.id ?? null;
+  } catch (e) {
+    console.warn("[Memory] DB offline, cannot look up user.");
+    return null;
+  }
 }
 
 export const handleGetMemory: RequestHandler = async (req, res) => {
   try {
     const userId = await getUserId((req as any).sessionId);
-    if (!userId) return res.status(404).json({ ok: false, error: "User not found" });
+    if (!userId) return res.json({ ok: true, data: [] });
 
     const memories = await db.query.mentorMemory.findMany({
       where: eq(mentorMemory.userId, userId),
@@ -21,19 +26,18 @@ export const handleGetMemory: RequestHandler = async (req, res) => {
 
     res.json({ ok: true, data: memories });
   } catch (e: any) {
-    res.status(500).json({ ok: false, error: e?.message });
+    console.warn("[Memory] DB offline, returning empty.", e?.message);
+    res.json({ ok: true, data: [] });
   }
 };
 
 export const handleAddMemory: RequestHandler = async (req, res) => {
   try {
     const userId = await getUserId((req as any).sessionId);
-    if (!userId) return res.status(404).json({ ok: false, error: "User not found" });
+    if (!userId) return res.json({ ok: true, note: "DB offline, memory not saved." });
 
     const { memoryType, content } = req.body;
     
-    // Upsert or insert depending on if memoryType is meant to be singular.
-    // For now we just insert.
     await db.insert(mentorMemory).values({
       userId,
       memoryType,
@@ -42,6 +46,7 @@ export const handleAddMemory: RequestHandler = async (req, res) => {
 
     res.json({ ok: true });
   } catch (e: any) {
-    res.status(500).json({ ok: false, error: e?.message });
+    console.warn("[Memory] DB offline, skipping save.", e?.message);
+    res.json({ ok: true, note: "DB offline, memory not saved." });
   }
 };

@@ -5,25 +5,29 @@ import { eq, and } from "drizzle-orm";
 
 export const handleGenerateQuiz: RequestHandler = async (req, res) => {
   try {
-    const sessionId = (req as any).sessionId;
-    const user = await db.query.users.findFirst({
-      where: eq(users.sessionId, sessionId),
-    });
-
-    if (!user) return res.status(404).json({ ok: false, error: "User not found" });
-
     const topic = req.query.topic as string;
     if (!topic) return res.status(400).json({ ok: false, error: "Missing topic" });
 
-    // Dynamic Difficulty Engine: Check current mastery
+    // Dynamic Difficulty Engine: try to check current mastery from DB
     let difficulty = "beginner";
-    const mastery = await db.query.topicMastery.findFirst({
-      where: and(eq(topicMastery.userId, user.id), eq(topicMastery.topic, topic))
-    });
+    try {
+      const sessionId = (req as any).sessionId;
+      const user = await db.query.users.findFirst({
+        where: eq(users.sessionId, sessionId),
+      });
 
-    if (mastery) {
-      if ((mastery.masteryScore ?? 0) >= 80) difficulty = "advanced";
-      else if ((mastery.masteryScore ?? 0) >= 50) difficulty = "intermediate";
+      if (user) {
+        const mastery = await db.query.topicMastery.findFirst({
+          where: and(eq(topicMastery.userId, user.id), eq(topicMastery.topic, topic))
+        });
+
+        if (mastery) {
+          if ((mastery.masteryScore ?? 0) >= 80) difficulty = "advanced";
+          else if ((mastery.masteryScore ?? 0) >= 50) difficulty = "intermediate";
+        }
+      }
+    } catch (e) {
+      console.warn("[Quiz Generator] DB offline, using default difficulty.");
     }
 
     // Call Groq API

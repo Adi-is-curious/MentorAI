@@ -26,20 +26,50 @@ export const handleGenerateQuiz: RequestHandler = async (req, res) => {
       else if ((mastery.masteryScore ?? 0) >= 50) difficulty = "intermediate";
     }
 
-    // Call Python Service
+    // Call Groq API
     let quizData;
     try {
-      const pyResponse = await fetch("http://localhost:8000/generate-quiz", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, difficulty })
-      });
-      if (!pyResponse.ok) {
-        throw new Error("Python service failed");
+      const Groq = (await import("groq-sdk")).default;
+      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+      const prompt = `
+      You are an expert technical interviewer and computer science professor.
+      Generate a ${difficulty} level quiz about '${topic}'.
+      
+      The quiz must strictly be in valid JSON format matching this schema:
+      {
+          "topic": "${topic}",
+          "difficulty": "${difficulty}",
+          "questions": [
+              {
+                  "type": "mcq",
+                  "question": "string",
+                  "options": ["string", "string", "string", "string"],
+                  "correct_index": number (0-3),
+                  "explanation": "string explaining why"
+              },
+              {
+                  "type": "conceptual",
+                  "question": "string",
+                  "rubric": "string mentioning keywords to look for in the user's answer"
+              }
+          ]
       }
-      quizData = await pyResponse.json();
+      
+      Include 2 MCQ questions and 1 conceptual question. Make the questions challenging but fair for a ${difficulty} level.
+      Only return the JSON.
+      `;
+
+      const chatCompletion = await groq.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "llama3-70b-8192",
+        temperature: 0.3,
+        response_format: { type: "json_object" }
+      });
+
+      const responseText = chatCompletion.choices[0]?.message?.content || "{}";
+      quizData = JSON.parse(responseText);
     } catch (e: any) {
-      console.warn("[Quiz Generator] Python service offline, returning fallback quiz data.", e.message);
+      console.warn("[Quiz Generator] Groq AI service offline or failed, returning fallback quiz data.", e.message);
       quizData = {
         topic: topic,
         difficulty: difficulty,

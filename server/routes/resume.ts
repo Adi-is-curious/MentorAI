@@ -26,7 +26,7 @@ export const handleResumeAnalysis: RequestHandler = async (req, res) => {
 
     // Use native Web API FormData and Blob (supported in Node 18+)
     const formData = new FormData();
-    const blob = new Blob([req.file.buffer], { type: req.file.mimetype });
+    const blob = new Blob([new Uint8Array(req.file.buffer)], { type: req.file.mimetype });
     formData.append("file", blob, req.file.originalname);
     
     if (req.body.job_description) {
